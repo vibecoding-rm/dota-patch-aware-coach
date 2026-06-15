@@ -16,6 +16,7 @@ Punto de entrada obligatorio: lee `AGENTS.md` antes de investigar o construir.
 
 - `producto/vision_y_escalado.md`: que queremos construir, por que, como usa IA
   y como se escala desde validacion manual hasta producto pagado.
+- `producto/codex_setup.md`: skills, MCP y setup de Codex aplicado al proyecto.
 
 ## Regla de trabajo
 
