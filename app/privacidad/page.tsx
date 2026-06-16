@@ -18,6 +18,7 @@ export const metadata: Metadata = {
     url: `${SITE_URL}/privacidad`,
   },
   twitter: {
+    card: "summary_large_image",
     title: TITLE,
     description: DESCRIPTION,
   },

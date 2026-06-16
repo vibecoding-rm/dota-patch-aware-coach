@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: RouteParams): Promise<Metadat
         description: fallbackDescription,
         url: `${SITE_URL}/match/${id}`,
       },
-      twitter: { title: fallbackTitle, description: fallbackDescription },
+      twitter: { card: "summary_large_image", title: fallbackTitle, description: fallbackDescription },
     };
   }
 
@@ -47,6 +47,7 @@ export async function generateMetadata({ params }: RouteParams): Promise<Metadat
       url,
     },
     twitter: {
+      card: "summary_large_image",
       title: shareTitle,
       description,
     },
