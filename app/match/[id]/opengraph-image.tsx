@@ -44,7 +44,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
         title={`${p.heroName} · ${kda}`}
         subtitle={subtitle}
         tags={tags}
-        icon={p.won ? "⬥" : "⛒"}
+        icon={p.won ? "★" : "☆"}
         accent={accent}
       />
     ),
