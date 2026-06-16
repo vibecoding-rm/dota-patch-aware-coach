@@ -112,7 +112,7 @@ textarea {
 
 button {
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
   border: 1px solid transparent;
 }
 
@@ -208,7 +208,7 @@ button:focus-visible {
   border-radius: 999px;
   color: var(--muted);
   display: inline-flex;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   gap: 6px;
   min-height: 30px;
@@ -269,20 +269,18 @@ button:focus-visible {
   font-size: 14px;
   width: 100%;
   position: relative;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .navButton:hover {
   background: rgba(255, 255, 255, 0.04);
   color: #ffffff;
-  transform: translateX(2px);
 }
 
 .navButton[aria-pressed="true"] {
   background: linear-gradient(90deg, rgba(229, 62, 62, 0.15) 0%, rgba(229, 62, 62, 0.03) 100%);
-  border-color: rgba(229, 62, 62, 0.4);
+  border-left: 3px solid var(--accent);
+  padding-left: 13px;
   color: #ffffff;
-  box-shadow: 0 4px 15px rgba(229, 62, 62, 0.08), inset 0 0 10px rgba(229, 62, 62, 0.05);
 }
 
 .navButton[aria-pressed="true"] svg {
@@ -427,9 +425,9 @@ button:focus-visible {
 }
 
 .segButton[aria-pressed="true"] {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(229, 62, 62, 0.18);
   color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(229, 62, 62, 0.5);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
@@ -665,7 +663,8 @@ button:focus-visible {
   border-radius: 6px;
   font-size: 11px;
   font-weight: 700;
-  padding: 6px 12px;
+  min-height: 32px;
+  padding: 8px 12px;
   text-transform: uppercase;
   letter-spacing: 0.3px;
 }
@@ -1264,6 +1263,8 @@ button:focus-visible {
   margin-top: 10px;
   justify-content: center;
   font-weight: 900;
+  min-height: 48px;
+  font-size: 14.5px;
   background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
   box-shadow: 0 4px 15px var(--accent-glow);
   text-transform: uppercase;
@@ -1345,7 +1346,7 @@ button:focus-visible {
 }
 
 .displayPanelBody {
-  min-height: 450px;
+  min-height: 0;
   position: relative;
 }
 
@@ -2087,7 +2088,15 @@ button:focus-visible {
   }
 
   .toolTitle {
-    font-size: 24px;
+    font-size: 22px;
+  }
+
+  .toolSubtitle {
+    display: none;
+  }
+
+  .brandMeta {
+    font-size: 12px;
   }
 
   .statusStrip {
@@ -2286,8 +2295,8 @@ button:focus-visible {
 .helpTipBtn {
   display: inline-grid;
   place-items: center;
-  width: 16px;
-  height: 16px;
+  width: 24px;
+  height: 24px;
   padding: 0;
   border-radius: 50%;
   background: transparent;
@@ -2481,8 +2490,8 @@ button:focus-visible {
 .steamLogoutBtn {
   display: inline-grid;
   place-items: center;
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: transparent;
   border: 1px solid transparent;
@@ -2505,10 +2514,10 @@ button:focus-visible {
 .siteFooterInner {
   max-width: 1440px;
   margin: 0 auto;
-  padding: 22px 24px;
+  padding: 14px 20px;
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 16px;
   flex-wrap: wrap;
   justify-content: space-between;
 }
@@ -2557,6 +2566,8 @@ button:focus-visible {
 
 .footerLinks a:hover {
   color: var(--radiant);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .footerLegal {
@@ -2569,8 +2580,7 @@ button:focus-visible {
 
 @media (max-width: 680px) {
   .footerLegal {
-    text-align: left;
-    max-width: none;
+    display: none;
   }
 }
 

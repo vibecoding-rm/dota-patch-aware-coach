@@ -4,7 +4,6 @@ import {
   AlertTriangle,
   BarChart3,
   Check,
-  Clock,
   Copy,
   Cpu,
   Gauge,
@@ -62,9 +61,11 @@ export function ReplayPanel({
   copyReport: () => void;
   copyStatus: boolean;
 }) {
+  const showRightPanel = Boolean(isAnalyzing || replayReport || analysisError);
+
   return (
     <div className="replayContainer">
-      <div className="contentGrid replayGrid">
+      <div className="contentGrid replayGrid" data-has-report={showRightPanel}>
         <section className="panel">
           <div className="panelHeader">
             <h3 className="panelTitle">Consulta de Partida</h3>
@@ -126,6 +127,7 @@ export function ReplayPanel({
           </div>
         </section>
 
+        {showRightPanel && (
         <section className="panel">
           <div className="panelHeader">
             <h3 className="panelTitle">Visualizador de Reportes</h3>
@@ -150,14 +152,6 @@ export function ReplayPanel({
                 <AlertTriangle size={36} className="emptyStateIcon iconRed" />
                 <h4 className="emptyStateTitle">No se pudo generar el reporte</h4>
                 <p className="emptyStateText">{analysisError}</p>
-              </div>
-            )}
-
-            {!isAnalyzing && !replayReport && !analysisError && (
-              <div className="emptyState">
-                <Clock size={36} className="emptyStateIcon" />
-                <h4 className="emptyStateTitle">Sin Reporte Activo</h4>
-                <p className="emptyStateText">Ingresa los datos del formulario de la izquierda y haz clic en "Generar Reporte de Coach" para auditar la partida con datos reales de OpenDota.</p>
               </div>
             )}
 
@@ -331,6 +325,7 @@ export function ReplayPanel({
             )}
           </div>
         </section>
+        )}
       </div>
     </div>
   );
