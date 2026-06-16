@@ -408,7 +408,38 @@ button:focus-visible {
   align-items: start;
   display: grid;
   gap: 16px;
-  grid-template-columns: minmax(0, 1fr) minmax(440px, 1.05fr);
+  grid-template-columns: minmax(0, 1.05fr) minmax(440px, 1fr);
+}
+
+/* En Draft el panel de recomendación se queda visible mientras se navega el
+   form a la izquierda. Solo en pantallas anchas donde el sideNav rail está. */
+@media (min-width: 1101px) {
+  .contentGrid > section:last-child {
+    position: sticky;
+    top: 60px;
+    align-self: start;
+    max-height: calc(100dvh - 76px);
+    overflow-y: auto;
+  }
+}
+
+.engineCoverageNotice {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  background: rgba(237, 137, 54, 0.08);
+  border: 1px solid rgba(237, 137, 54, 0.28);
+  color: #f6d6b3;
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+
+.engineCoverageNotice svg {
+  flex: 0 0 auto;
+  margin-top: 1px;
 }
 
 .placeholderGrid {

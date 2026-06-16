@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { DraftAnalysis } from "@/lib/draft";
 import { heroImageUrl } from "@/data/dota";
+import { HERO_ROSTER_BY_ID } from "@/data/heroRoster.generated";
 import { ListBlock, Metric, ScoreBar } from "@/components/fields";
 import { RadialScore } from "@/components/RadialScore";
 import { RadarChart } from "@/components/RadarChart";
@@ -64,6 +65,10 @@ export function DraftResult({
   }
 
   const best = analysis?.best;
+  const unsupported = analysis?.unsupportedPool ?? [];
+  const unsupportedNames = unsupported
+    .map((id) => HERO_ROSTER_BY_ID[id]?.name ?? id)
+    .slice(0, 4);
 
   return (
     <section className="panel" aria-label="Resultado del analisis" data-tour="draft-result">
@@ -79,6 +84,16 @@ export function DraftResult({
         )}
       </div>
       <div className="panelBody">
+        {unsupported.length > 0 && (
+          <div className="engineCoverageNotice" role="status">
+            <AlertTriangle size={14} className="iconAmber" />
+            <span>
+              {unsupported.length === 1 ? "1 héroe sin scoring" : `${unsupported.length} héroes sin scoring`}
+              {" "}en tu pool ({unsupportedNames.join(", ")}
+              {unsupported.length > unsupportedNames.length ? "…" : ""}). El motor lo ignora hasta que se cure su metadata.
+            </span>
+          </div>
+        )}
         {best ? (
           <div className="recommendationStack">
             <div className="resultHero">

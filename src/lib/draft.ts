@@ -41,6 +41,9 @@ export type DraftAnalysis = {
   enemyThreats: string[];
   mapPlan: string[];
   freshnessWarning: string;
+  // Héroes del pool que el motor no puede puntuar todavía (sin metadata curada).
+  // Vacío si todo el pool tiene scoring; tres últimos por rol seleccionado.
+  unsupportedPool: string[];
 };
 
 const REQUIRED_TAGS: Array<{ tag: HeroTag; label: string }> = [
@@ -86,6 +89,7 @@ export function analyzeDraft(input: DraftInput): DraftAnalysis {
     const ctx = resolveDraft(input);
     // Sin pool no recomendamos: sugerir héroes que el jugador quizá no juega resta
     // confianza. La UI pide marcar el pool. (Antes caía a todos los héroes.)
+    const unsupportedPool = input.heroPool.filter((id) => !HERO_BY_ID.has(id));
     const candidates = input.heroPool
       .map((id) => HERO_BY_ID.get(id))
       .filter((hero): hero is Hero => Boolean(hero))
@@ -109,6 +113,7 @@ export function analyzeDraft(input: DraftInput): DraftAnalysis {
       enemyThreats: findEnemyThreats(ctx),
       mapPlan: buildMapPlan(ctx, scored[0]?.hero),
       freshnessWarning: "Base local 7.41d: útil para validar UX y scoring. Antes de cobrar, conecta el pipeline de parches oficiales.",
+      unsupportedPool,
     };
   } catch (error) {
     console.error("Error en analyzeDraft:", error);
@@ -120,6 +125,7 @@ export function analyzeDraft(input: DraftInput): DraftAnalysis {
       enemyThreats: [],
       mapPlan: ["Error al analizar el draft. Verifica los inputs."],
       freshnessWarning: "Error en el cálculo del draft.",
+      unsupportedPool: [],
     };
   }
 }

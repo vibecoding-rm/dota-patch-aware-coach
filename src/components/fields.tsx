@@ -292,9 +292,17 @@ export function DraftColumn({
   );
 }
 
+// Curados primero: el motor solo recomienda sobre el set curado, así que al
+// abrir el picker los héroes con scoring quedan arriba y los demás siguen en
+// orden alfabético (ya vienen ordenados desde el generated).
+const ALL_HEROES_SORTED: DisplayHero[] = [
+  ...ALL_HEROES.filter((h) => h.curated),
+  ...ALL_HEROES.filter((h) => !h.curated),
+];
+
 function filterHeroes(query: string) {
   const normalized = query.trim().toLowerCase();
-  if (!normalized) return ALL_HEROES;
+  if (!normalized) return ALL_HEROES_SORTED;
   return ALL_HEROES.filter((hero) => {
     const haystack = `${hero.name} ${hero.roles.map((role) => ROLE_LABELS[role]).join(" ")}`.toLowerCase();
     return haystack.includes(normalized);
