@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion } from "motion/react";
+import { toast, Toaster } from "sonner";
 import {
   BRACKET_LABELS,
   Bracket,
@@ -37,6 +38,7 @@ import {
 import { DraftResult } from "@/components/DraftResult";
 import { OnboardingTour } from "@/components/OnboardingTour";
 import { SteamAuth } from "@/components/SteamAuth";
+import { Footer } from "@/components/Footer";
 import { PatchCoachPanel } from "@/components/PatchCoachPanel";
 import { ReplayPanel, type ReportPerspective } from "@/components/ReplayPanel";
 import { CoachWorkspacePanel } from "@/components/CoachWorkspacePanel";
@@ -172,6 +174,17 @@ export function CoachApp() {
     return () => clearTimeout(debounceTimer);
   }, [role, bracket, style, heroPool, allies, enemies]);
 
+  // Feedback del login con Steam: el callback nos devuelve con ?auth=ok|error.
+  // Mostramos el toast y limpiamos el query para que no reaparezca al recargar.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const auth = params.get("auth");
+    if (!auth) return;
+    if (auth === "ok") toast.success("Sesión de Steam iniciada. Tu Account ID quedó cargado.");
+    if (auth === "error") toast.error("No se pudo iniciar sesión con Steam. Intenta de nuevo.");
+    window.history.replaceState({}, "", window.location.pathname);
+  }, []);
+
   const copy = MODE_COPY[mode];
 
   const startReplayAnalysis = async () => {
@@ -218,19 +231,27 @@ export function CoachApp() {
   const copyMarkdownReport = () => {
     if (!replayReport) return;
     const md = generateMarkdown(replayReport);
-    navigator.clipboard.writeText(md).then(() => {
-      setCopyStatus(true);
-      setTimeout(() => setCopyStatus(false), 2000);
-    });
+    navigator.clipboard.writeText(md).then(
+      () => {
+        setCopyStatus(true);
+        setTimeout(() => setCopyStatus(false), 2000);
+        toast.success("Reporte copiado al portapapeles en Markdown.");
+      },
+      () => toast.error("No se pudo copiar. Revisa los permisos del portapapeles."),
+    );
   };
 
   const copyCoachReport = () => {
     if (!coachReport) return;
     const md = generateMarkdown(coachReport, academyName);
-    navigator.clipboard.writeText(md).then(() => {
-      setCopyStatus(true);
-      setTimeout(() => setCopyStatus(false), 2000);
-    });
+    navigator.clipboard.writeText(md).then(
+      () => {
+        setCopyStatus(true);
+        setTimeout(() => setCopyStatus(false), 2000);
+        toast.success(`Reporte exportado con la marca de ${academyName || "tu academia"}.`);
+      },
+      () => toast.error("No se pudo copiar. Revisa los permisos del portapapeles."),
+    );
   };
 
   const generateMarkdown = (report: MockReplayReport, academy?: string) => {
@@ -508,6 +529,15 @@ ${report.plan.map((p) => `- ${p}`).join("\n")}
           </motion.div>
         </section>
       </div>
+
+      <Footer />
+
+      <Toaster
+        theme="dark"
+        position="bottom-right"
+        richColors
+        toastOptions={{ style: { fontFamily: "var(--font-body)" } }}
+      />
     </main>
   );
 }

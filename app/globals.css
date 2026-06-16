@@ -2329,3 +2329,84 @@ button:focus-visible {
   color: var(--red);
   border-color: rgba(245, 101, 101, 0.4);
 }
+
+/* ===================== Footer ===================== */
+.siteFooter {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--line);
+  background: rgba(10, 11, 15, 0.6);
+  backdrop-filter: blur(10px);
+}
+
+.siteFooterInner {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 22px 24px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.footerBrand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.footerBrandIcon {
+  color: var(--accent);
+  flex: 0 0 auto;
+}
+
+.footerBrandName {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.3px;
+}
+
+.footerBrandNote {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.footerLinks {
+  display: flex;
+  gap: 18px;
+}
+
+.footerLinks a {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  text-decoration: none;
+  letter-spacing: 0.3px;
+  transition: color 0.2s ease;
+}
+
+.footerLinks a:hover {
+  color: var(--radiant);
+}
+
+.footerLegal {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 0;
+  max-width: 320px;
+  text-align: right;
+}
+
+@media (max-width: 680px) {
+  .footerLegal {
+    text-align: left;
+    max-width: none;
+  }
+}

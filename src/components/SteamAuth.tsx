@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { LogOut, User } from "lucide-react";
+import { toast } from "sonner";
 
 export type SteamUser = {
   steamId64: string;
@@ -40,6 +41,7 @@ export function SteamAuth({ onUser }: { onUser?: (user: SteamUser | null) => voi
     await fetch("/api/auth/logout", { method: "POST" });
     setUser(null);
     onUser?.(null);
+    toast.success("Sesión cerrada.");
   };
 
   if (loading) {
