@@ -514,12 +514,25 @@ button:focus-visible {
   font-family: var(--font-mono);
 }
 
+/* Solo lectores de pantalla: oculto visualmente sin perder el DOM. */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* Hero Picker & Grid */
 .heroGrid {
   display: grid;
   gap: 6px;
-  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-  max-height: 260px;
+  grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+  max-height: clamp(360px, 50vh, 600px);
   overflow-y: auto;
   background: rgba(0, 0, 0, 0.15);
   padding: 8px;
@@ -622,6 +635,33 @@ button:focus-visible {
   border-left: 2px solid var(--red);
 }
 
+.heroButton.nonCurated {
+  opacity: 0.7;
+}
+
+.heroButton.nonCurated.selected {
+  opacity: 1;
+}
+
+.nonCuratedDot {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--muted);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4);
+}
+
+.slotButton.nonCurated {
+  opacity: 0.7;
+}
+
+.slotButton.nonCurated.selected {
+  opacity: 1;
+}
+
 .heroName {
   font-size: 13px;
   font-weight: 800;
@@ -660,7 +700,7 @@ button:focus-visible {
   padding: 8px;
   border-radius: 8px;
   border: 1px solid var(--line);
-  max-height: 150px;
+  max-height: clamp(220px, 32vh, 380px);
   overflow-y: auto;
 }
 

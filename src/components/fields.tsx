@@ -1,7 +1,7 @@
 "use client";
 
 import { Check } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import { HERO_BY_ID, ROLE_LABELS, heroImageUrl } from "@/data/dota";
 import { HERO_ROSTER } from "@/data/heroRoster.generated";
 import type { Role } from "@/data/dota";
@@ -69,12 +69,11 @@ export function ModeButton({
   icon: React.ReactNode;
   onClick: () => void;
 }) {
-  const label = typeof children === "string" ? children : "";
+  // El nombre accesible viene del span visible; sin aria-label ni title para
+  // no triplicar la lectura del screen reader.
   return (
     <button
       aria-pressed={active}
-      aria-label={label}
-      title={label}
       className="navButton"
       onClick={onClick}
       type="button"
@@ -102,15 +101,18 @@ export function SegmentedField<T extends string>({
   values: T[];
   help?: string;
 }) {
+  const labelId = useId();
   return (
     <div className="fieldGroup">
-      <span className="fieldLabel">
+      <span className="fieldLabel" id={labelId}>
         {label}
         {help && <HelpTip text={help} label={`Ayuda: ${label}`} />}
       </span>
-      <div className="segmented">
+      <div className="segmented" role="radiogroup" aria-labelledby={labelId}>
         {values.map((item) => (
           <button
+            role="radio"
+            aria-checked={value === item}
             aria-pressed={value === item}
             className="segButton"
             key={item}
@@ -170,10 +172,12 @@ export function HeroPicker({
 }) {
   const [query, setQuery] = useState("");
   const visibleHeroes = useMemo(() => filterHeroes(query), [query]);
+  const titleId = useId();
+  const countId = useId();
 
   return (
     <div className="fieldGroup">
-      <span className="fieldLabel">
+      <span className="fieldLabel" id={titleId}>
         {title}
         {help && <HelpTip text={help} label={`Ayuda: ${title}`} />}
       </span>
@@ -186,18 +190,27 @@ export function HeroPicker({
           value={query}
         />
       </div>
-      <div className="heroGrid">
+      <span id={countId} className="srOnly">
+        {visibleHeroes.length} héroes disponibles, {selected.length} marcados.
+      </span>
+      <div
+        className="heroGrid"
+        role="group"
+        aria-labelledby={`${titleId} ${countId}`}
+      >
         {visibleHeroes.map((hero) => {
           const isSelected = selected.includes(hero.id);
           const hasBuff = hero.patchValue > 0;
           const hasNerf = hero.patchValue < 0;
+          const nonCurated = !hero.curated;
           return (
             <button
               aria-pressed={isSelected}
-              className={`heroButton ${isSelected ? "selected" : ""} ${hasBuff ? "buffed" : ""} ${hasNerf ? "nerfed" : ""}`}
+              className={`heroButton ${isSelected ? "selected" : ""} ${hasBuff ? "buffed" : ""} ${hasNerf ? "nerfed" : ""} ${nonCurated ? "nonCurated" : ""}`}
               key={hero.id}
               onClick={() => onToggle(hero.id)}
               type="button"
+              title={nonCurated ? `${hero.name} (sin scoring en el motor todavía)` : hero.name}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img className="heroButtonImg" src={heroImageUrl(hero.id)} alt="" loading="lazy" decoding="async" aria-hidden="true" />
@@ -209,8 +222,10 @@ export function HeroPicker({
               {(hasBuff || hasNerf) && (
                 <span className={`patchBadge ${hasBuff ? "buff" : "nerf"}`}>
                   {hasBuff ? "▲" : "▼"}
+                  <span className="srOnly">{hasBuff ? "Buffed" : "Nerfed"} en este parche</span>
                 </span>
               )}
+              {nonCurated && <span className="nonCuratedDot" aria-hidden="true" />}
             </button>
           );
         })}
@@ -232,10 +247,12 @@ export function DraftColumn({
 }) {
   const [query, setQuery] = useState("");
   const visibleHeroes = useMemo(() => filterHeroes(query), [query]);
+  const titleId = useId();
+  const countId = useId();
 
   return (
     <div className="fieldGroup">
-      <span className="fieldLabel">
+      <span className="fieldLabel" id={titleId}>
         {title}
         {help && <HelpTip text={help} label={`Ayuda: ${title}`} />}
       </span>
@@ -246,13 +263,21 @@ export function DraftColumn({
         placeholder="Buscar héroe..."
         value={query}
       />
-      <div className="draftSlots">
+      <span id={countId} className="srOnly">
+        {visibleHeroes.length} héroes disponibles, {selected.length} marcados.
+      </span>
+      <div
+        className="draftSlots"
+        role="group"
+        aria-labelledby={`${titleId} ${countId}`}
+      >
         {visibleHeroes.map((hero) => {
           const isSelected = selected.includes(hero.id);
+          const nonCurated = !hero.curated;
           return (
             <button
               aria-pressed={isSelected}
-              className={`slotButton ${isSelected ? "selected" : ""}`}
+              className={`slotButton ${isSelected ? "selected" : ""} ${nonCurated ? "nonCurated" : ""}`}
               key={hero.id}
               onClick={() => onToggle(hero.id)}
               type="button"

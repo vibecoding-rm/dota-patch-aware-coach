@@ -15,8 +15,17 @@ test("la home carga con el draft y una recomendación", async ({ page }) => {
   await gotoApp(page);
   await expect(page.locator(".brandTitle")).toBeVisible();
   await expect(page.locator(".resultName")).toBeVisible();
-  // hay 24 héroes con su retrato
-  await expect(page.locator(".heroButton")).toHaveCount(24);
+  // Los pickers muestran el roster completo de OpenDota (>= 100 héroes).
+  const heroCount = await page.locator(".heroGrid .heroButton").count();
+  expect(heroCount).toBeGreaterThan(100);
+});
+
+test("los héroes no curados aparecen marcados como tales", async ({ page }) => {
+  await gotoApp(page);
+  // Abaddon no está en el set curado y debe aparecer con la clase nonCurated.
+  const abaddon = page.locator('.heroGrid .heroButton', { hasText: 'Abaddon' });
+  await expect(abaddon).toBeVisible();
+  await expect(abaddon).toHaveClass(/nonCurated/);
 });
 
 test("el desglose muestra el radar de scoring", async ({ page }) => {
