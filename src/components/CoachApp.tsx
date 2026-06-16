@@ -36,6 +36,7 @@ import {
 } from "@/components/fields";
 import { DraftResult } from "@/components/DraftResult";
 import { OnboardingTour } from "@/components/OnboardingTour";
+import { SteamAuth } from "@/components/SteamAuth";
 import { PatchCoachPanel } from "@/components/PatchCoachPanel";
 import { ReplayPanel, type ReportPerspective } from "@/components/ReplayPanel";
 import { CoachWorkspacePanel } from "@/components/CoachWorkspacePanel";
@@ -336,6 +337,11 @@ ${report.plan.map((p) => `- ${p}`).join("\n")}
             </div>
           </div>
           <div className="statusStrip" aria-label="Estado de datos">
+            <SteamAuth
+              onUser={(u) => {
+                if (u) setAccountId(String(u.accountId));
+              }}
+            />
             <OnboardingTour onStart={() => setMode("draft")} />
             <span className="statusPill">
               <Gauge size={14} className="iconRed" /> Parche <strong>{PATCH_STATE.version}</strong>

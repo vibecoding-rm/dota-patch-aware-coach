@@ -2246,3 +2246,86 @@ button:focus-visible {
 .driver-popover-arrow-side-right.driver-popover-arrow { border-right-color: #0c0e13; }
 .driver-popover-arrow-side-top.driver-popover-arrow { border-top-color: #0c0e13; }
 .driver-popover-arrow-side-bottom.driver-popover-arrow { border-bottom-color: #0c0e13; }
+
+/* ===================== Login con Steam ===================== */
+.steamAuthPlaceholder {
+  display: inline-block;
+  width: 132px;
+  height: 32px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.steamLoginBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  color: #c7e3f7;
+  background: linear-gradient(180deg, #2a475e 0%, #1b2838 100%);
+  border: 1px solid rgba(102, 192, 244, 0.35);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+}
+
+.steamLoginBtn:hover {
+  color: #ffffff;
+  border-color: rgba(102, 192, 244, 0.7);
+  box-shadow: 0 0 16px rgba(102, 192, 244, 0.22);
+}
+
+.steamUserChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  padding: 4px 6px 4px 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--line-light);
+}
+
+.steamUserAvatar {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.steamUserAvatarFallback {
+  color: var(--radiant);
+  margin-left: 4px;
+}
+
+.steamUserName {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+  max-width: 130px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.steamLogoutBtn {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--muted);
+}
+
+.steamLogoutBtn:hover {
+  color: var(--red);
+  border-color: rgba(245, 101, 101, 0.4);
+}
