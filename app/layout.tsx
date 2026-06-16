@@ -1,5 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Chakra_Petch, Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 // Chakra Petch: tipografía técnica con cortes angulares; lee como un HUD de
@@ -27,6 +29,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: TITLE,
   description: DESCRIPTION,
+  manifest: "/manifest.webmanifest",
   openGraph: {
     title: TITLE,
     description: DESCRIPTION,
@@ -42,6 +45,11 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  themeColor: "#0a0b0f",
+  colorScheme: "dark",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -49,7 +57,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className={`${display.variable} ${body.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Analytics />
+        <SpeedInsights />
+      </body>
     </html>
   );
 }
