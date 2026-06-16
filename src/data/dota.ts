@@ -588,7 +588,11 @@ const HERO_IMAGE_OVERRIDES: Record<string, string> = {
 };
 
 // Retrato oficial (256x144) del héroe desde la CDN pública de Steam. Sin auth.
+// Prefiere shortName del roster real de OpenDota cuando exista; cae al override
+// curado y por último al id slugificado para no romper en héroes legacy.
+import { HERO_ROSTER_BY_ID } from "@/data/heroRoster.generated";
 export function heroImageUrl(id: string): string {
-  const name = HERO_IMAGE_OVERRIDES[id] ?? id.replace(/-/g, "_");
+  const fromRoster = HERO_ROSTER_BY_ID[id]?.shortName;
+  const name = fromRoster ?? HERO_IMAGE_OVERRIDES[id] ?? id.replace(/-/g, "_");
   return `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/${name}.png`;
 }

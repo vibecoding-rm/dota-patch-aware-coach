@@ -2,8 +2,61 @@
 
 import { Check } from "lucide-react";
 import { useMemo, useState } from "react";
-import { HEROES, ROLE_LABELS, heroImageUrl } from "@/data/dota";
+import { HERO_BY_ID, ROLE_LABELS, heroImageUrl } from "@/data/dota";
+import { HERO_ROSTER } from "@/data/heroRoster.generated";
+import type { Role } from "@/data/dota";
 import { HelpTip } from "@/components/HelpTip";
+
+// Mapeo grosso modo de las etiquetas de OpenDota a nuestros roles para que los
+// héroes que no están en el curado igual aparezcan con un rol legible.
+const OPENDOTA_ROLE_TO_ROLE: Record<string, Role> = {
+  Carry: "carry",
+  Initiator: "offlane",
+  Disabler: "support4",
+  Support: "support5",
+  Durable: "offlane",
+  Escape: "carry",
+  Nuker: "mid",
+  Pusher: "offlane",
+  Jungler: "carry",
+};
+
+type DisplayHero = {
+  id: string;
+  name: string;
+  roles: Role[];
+  patchValue: number;
+  curated: boolean;
+};
+
+function rosterRolesToRoles(roles: readonly string[]): Role[] {
+  const mapped: Role[] = [];
+  for (const r of roles) {
+    const m = OPENDOTA_ROLE_TO_ROLE[r];
+    if (m && !mapped.includes(m)) mapped.push(m);
+  }
+  return mapped.length > 0 ? mapped : ["carry"];
+}
+
+const ALL_HEROES: DisplayHero[] = HERO_ROSTER.map((r) => {
+  const curated = HERO_BY_ID.get(r.id);
+  if (curated) {
+    return {
+      id: curated.id,
+      name: curated.name,
+      roles: curated.roles,
+      patchValue: curated.patchValue,
+      curated: true,
+    };
+  }
+  return {
+    id: r.id,
+    name: r.name,
+    roles: rosterRolesToRoles(r.roles),
+    patchValue: 0,
+    curated: false,
+  };
+});
 
 export function ModeButton({
   active,
@@ -216,12 +269,13 @@ export function DraftColumn({
 
 function filterHeroes(query: string) {
   const normalized = query.trim().toLowerCase();
-  if (!normalized) return HEROES;
-  return HEROES.filter((hero) => {
+  if (!normalized) return ALL_HEROES;
+  return ALL_HEROES.filter((hero) => {
     const haystack = `${hero.name} ${hero.roles.map((role) => ROLE_LABELS[role]).join(" ")}`.toLowerCase();
     return haystack.includes(normalized);
   });
 }
+
 
 export function ScoreBar({
   label,
