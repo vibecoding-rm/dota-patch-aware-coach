@@ -35,7 +35,11 @@ type OgCardProps = {
   title: string;
   subtitle: string;
   tags: string[];
-  icon?: string;
+  // Acepta string solo si estás seguro de que el glyph existe en el subset que
+  // Satori embebe (Inter base + emoji limitado). Para cualquier símbolo
+  // decorativo es más seguro pasar un <svg> inline: Satori lo rasteriza sin
+  // depender de la fuente.
+  icon?: string | ReactElement;
   accent?: AccentName;
 };
 
