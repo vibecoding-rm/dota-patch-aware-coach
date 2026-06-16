@@ -2,8 +2,12 @@
 
 import { AlertTriangle, ChevronRight, TrendingUp, Cpu, Zap } from "lucide-react";
 import { DraftAnalysis } from "@/lib/draft";
+import { heroImageUrl } from "@/data/dota";
 import { ListBlock, Metric, Phase, ScoreBar } from "@/components/fields";
 import { RadialScore } from "@/components/RadialScore";
+import { RadarChart } from "@/components/RadarChart";
+
+const clamp01 = (n: number) => Math.max(0, Math.min(1, n));
 
 export function DraftResult({
   analysis,
@@ -70,6 +74,8 @@ export function DraftResult({
         {best ? (
           <div className="recommendationStack">
             <div className="resultHero">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img className="resultHeroImg" src={heroImageUrl(best.hero.id)} alt="" loading="lazy" decoding="async" aria-hidden="true" />
               <div className="resultTopline">
                 <div>
                   <span className="metricLabel primaryLabel">PICK RECOMENDADO</span>
@@ -83,6 +89,18 @@ export function DraftResult({
               {showDetails && (
                 <div className="scoreDetailsGrid">
                   <h4 className="detailSectionTitle">Desglose del Motor de Reglas</h4>
+                  <div className="radarWrap">
+                    <RadarChart
+                      data={[
+                        { label: "Comfort", value: clamp01(best.scores.comfort / 29) },
+                        { label: "Línea", value: clamp01(best.scores.laneMatchup / 24) },
+                        { label: "Sinergia", value: clamp01(best.scores.teamSynergy / 22) },
+                        { label: "Counter", value: clamp01((best.scores.counterValue + 8) / 26) },
+                        { label: "Parche", value: clamp01((best.scores.patchValue + 8) / 16) },
+                        { label: "Seguridad", value: clamp01((15 - best.scores.executionRisk) / 15) },
+                      ]}
+                    />
+                  </div>
                   <ScoreBar label="Comfort Pool" value={best.scores.comfort} max={29} color="#805AD5" />
                   <ScoreBar label="Matchup en Línea" value={best.scores.laneMatchup} max={24} color="#38A169" />
                   <ScoreBar label="Sinergia de Equipo" value={best.scores.teamSynergy} max={22} color="#3182CE" />

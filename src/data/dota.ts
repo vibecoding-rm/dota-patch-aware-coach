@@ -626,3 +626,16 @@ export const MOCK_REPLAY_REPORTS: Record<string, MockReplayReport> = {
 export function getDefaultMockReport(): MockReplayReport {
   return Object.values(MOCK_REPLAY_REPORTS)[0];
 }
+
+// Algunos héroes usan un nombre interno distinto al id legible en la CDN de Valve.
+const HERO_IMAGE_OVERRIDES: Record<string, string> = {
+  "shadow-fiend": "nevermore",
+  "queen-of-pain": "queenofpain",
+  zeus: "zuus",
+};
+
+// Retrato oficial (256x144) del héroe desde la CDN pública de Steam. Sin auth.
+export function heroImageUrl(id: string): string {
+  const name = HERO_IMAGE_OVERRIDES[id] ?? id.replace(/-/g, "_");
+  return `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/${name}.png`;
+}

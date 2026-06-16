@@ -1,7 +1,7 @@
 "use client";
 
 import { Check } from "lucide-react";
-import { HEROES, ROLE_LABELS } from "@/data/dota";
+import { HEROES, ROLE_LABELS, heroImageUrl } from "@/data/dota";
 
 export function ModeButton({
   active,
@@ -107,8 +107,13 @@ export function HeroPicker({
               onClick={() => onToggle(hero.id)}
               type="button"
             >
-              <span className="heroName">{hero.name}</span>
-              <span className="heroRoles">{hero.roles.map((heroRole) => ROLE_LABELS[heroRole]).join(", ")}</span>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img className="heroButtonImg" src={heroImageUrl(hero.id)} alt="" loading="lazy" decoding="async" aria-hidden="true" />
+              <span className="heroButtonOverlay" />
+              <span className="heroButtonText">
+                <span className="heroName">{hero.name}</span>
+                <span className="heroRoles">{hero.roles.map((heroRole) => ROLE_LABELS[heroRole]).join(", ")}</span>
+              </span>
               {(hasBuff || hasNerf) && (
                 <span className={`patchBadge ${hasBuff ? "buff" : "nerf"}`}>
                   {hasBuff ? "▲" : "▼"}

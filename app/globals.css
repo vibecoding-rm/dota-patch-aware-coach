@@ -452,10 +452,9 @@ button:focus-visible {
 }
 
 .heroButton {
-  align-items: start;
-  flex-direction: column;
-  justify-content: center;
-  min-height: 52px;
+  display: flex;
+  align-items: end;
+  min-height: 62px;
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.04);
   border-radius: 6px;
@@ -465,17 +464,67 @@ button:focus-visible {
   overflow: hidden;
 }
 
+/* Retrato del héroe como fondo, recortado al área de la cara para que el grid
+   lea como una baraja de cards reales de Dota. */
+.heroButtonImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 70% 28%;
+  opacity: 0.55;
+  filter: saturate(1.05);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease;
+  z-index: 0;
+}
+
+.heroButtonOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    100deg,
+    rgba(7, 8, 10, 0.94) 18%,
+    rgba(7, 8, 10, 0.72) 52%,
+    rgba(7, 8, 10, 0.35) 100%
+  );
+}
+
+.heroButtonText {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+}
+
 .heroButton:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(45, 212, 191, 0.3);
+  border-color: rgba(45, 212, 191, 0.35);
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(45, 212, 191, 0.12);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(45, 212, 191, 0.14);
+}
+
+.heroButton:hover .heroButtonImg {
+  transform: scale(1.08);
+  opacity: 0.7;
 }
 
 .heroButton.selected {
-  background: rgba(229, 62, 62, 0.1);
-  border-color: rgba(229, 62, 62, 0.5);
-  box-shadow: 0 0 8px rgba(229, 62, 62, 0.2);
+  border-color: rgba(229, 62, 62, 0.6);
+  box-shadow: 0 0 0 1px rgba(229, 62, 62, 0.4), 0 0 14px rgba(229, 62, 62, 0.25);
+}
+
+.heroButton.selected .heroButtonImg {
+  opacity: 0.78;
+}
+
+.heroButton.selected .heroButtonOverlay {
+  background: linear-gradient(
+    100deg,
+    rgba(60, 12, 12, 0.92) 16%,
+    rgba(20, 8, 10, 0.66) 52%,
+    rgba(120, 25, 25, 0.22) 100%
+  );
 }
 
 .heroButton.buffed {
@@ -585,6 +634,8 @@ button:focus-visible {
 }
 
 .resultHero {
+  position: relative;
+  overflow: hidden;
   background: linear-gradient(135deg, rgba(229, 62, 62, 0.08) 0%, rgba(20, 22, 27, 0.9) 100%);
   border: 1px solid rgba(229, 62, 62, 0.28);
   border-radius: 12px;
@@ -592,7 +643,26 @@ button:focus-visible {
   box-shadow: 0 4px 25px rgba(229, 62, 62, 0.05);
 }
 
+/* Retrato del héroe recomendado como banner: ocupa la mitad derecha y se
+   desvanece hacia el contenido, de forma que el nombre y el anillo se leen
+   sobre la cara del héroe sin perder contraste. */
+.resultHeroImg {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 62%;
+  object-fit: cover;
+  object-position: 60% 22%;
+  opacity: 0.5;
+  z-index: 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 60%);
+  mask-image: linear-gradient(90deg, transparent 0%, #000 60%);
+}
+
 .resultTopline {
+  position: relative;
+  z-index: 1;
   align-items: start;
   display: flex;
   gap: 16px;
@@ -1993,4 +2063,50 @@ button:focus-visible {
   letter-spacing: 2px;
   color: var(--gold-soft);
   margin-top: 2px;
+}
+
+/* Radar de scoring del draft */
+.radarWrap {
+  display: grid;
+  place-items: center;
+  padding: 4px 0 10px;
+}
+
+.radarChart {
+  width: 100%;
+  max-width: 250px;
+  height: auto;
+  overflow: visible;
+}
+
+.radarRing {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.07);
+  stroke-width: 1;
+}
+
+.radarAxisLine {
+  stroke: rgba(255, 255, 255, 0.08);
+  stroke-width: 1;
+}
+
+.radarArea {
+  fill: url(#radarFill);
+  stroke: var(--gold);
+  stroke-width: 1.6;
+}
+
+.radarDot {
+  fill: #ffffff;
+  stroke: var(--gold);
+  stroke-width: 1;
+}
+
+.radarLabel {
+  fill: var(--muted);
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
 }
