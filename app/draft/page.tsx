@@ -1,5 +1,5 @@
 import { CoachApp } from "@/components/CoachApp";
 
-export default function Home() {
+export default function DraftPage() {
   return <CoachApp initialMode="draft" />;
 }

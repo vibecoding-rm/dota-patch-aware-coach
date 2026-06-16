@@ -5,27 +5,34 @@ async function gotoApp(page: import("@playwright/test").Page) {
   await expect(page.locator('[data-app-ready="true"]')).toBeVisible();
 }
 
-// Para los flujos funcionales marcamos el onboarding como visto para que el tour
-// no tape los clics.
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem("dpac.onboarded.v1", "1"));
 });
 
-test("la home carga con el draft y una recomendación", async ({ page }) => {
+test("la home carga con el draft y una recomendacion", async ({ page }) => {
   await gotoApp(page);
   await expect(page.locator(".brandTitle")).toBeVisible();
   await expect(page.locator(".resultName")).toBeVisible();
-  // Los pickers muestran el roster completo de OpenDota (>= 100 héroes).
   const heroCount = await page.locator(".heroGrid .heroButton").count();
   expect(heroCount).toBeGreaterThan(100);
 });
 
-test("los héroes no curados aparecen marcados como tales", async ({ page }) => {
+test("los heroes no curados aparecen marcados como tales", async ({ page }) => {
   await gotoApp(page);
-  // Abaddon no está en el set curado y debe aparecer con la clase nonCurated.
-  const abaddon = page.locator('.heroGrid .heroButton', { hasText: 'Abaddon' });
+  const abaddon = page.locator(".heroGrid .heroButton", { hasText: "Abaddon" });
   await expect(abaddon).toBeVisible();
   await expect(abaddon).toHaveClass(/nonCurated/);
+});
+
+test("aliados y enemigos tambien muestran el roster completo", async ({ page }) => {
+  await gotoApp(page);
+  const allyColumn = page.locator(".fieldGroup").filter({ hasText: "Aliados ya elegidos" });
+  const enemyColumn = page.locator(".fieldGroup").filter({ hasText: "Enemigos ya elegidos" });
+
+  await expect(allyColumn.getByRole("button", { name: /Abaddon/ })).toBeVisible();
+  await expect(enemyColumn.getByRole("button", { name: /Abaddon/ })).toBeVisible();
+  expect(await allyColumn.locator(".slotButton").count()).toBeGreaterThan(100);
+  expect(await enemyColumn.locator(".slotButton").count()).toBeGreaterThan(100);
 });
 
 test("el desglose muestra el radar de scoring", async ({ page }) => {
@@ -34,13 +41,11 @@ test("el desglose muestra el radar de scoring", async ({ page }) => {
   await expect(page.locator(".radarChart")).toBeVisible();
 });
 
-test("cambiar el pool actualiza la recomendación sin romper", async ({ page }) => {
+test("cambiar el pool actualiza la recomendacion sin romper", async ({ page }) => {
   await gotoApp(page);
   await expect(page.locator(".resultName")).toBeVisible();
-  // añadir un héroe que no está en el pool por defecto
   await page.locator(".heroButton", { hasText: "Juggernaut" }).click();
   await page.waitForLoadState("networkidle");
-  // sigue habiendo una recomendación válida con su puntaje
   await expect(page.locator(".resultName")).toBeVisible();
   await expect(page.locator(".radialScoreNum")).toBeVisible();
 });
@@ -52,7 +57,7 @@ test("el buscador del pool filtra heroes", async ({ page }) => {
   await expect(page.locator(".heroButton")).toContainText("Queen of Pain");
 });
 
-test("vaciar el pool pide marcar héroes en vez de recomendar al azar", async ({ page }) => {
+test("vaciar el pool pide marcar heroes en vez de recomendar al azar", async ({ page }) => {
   await gotoApp(page);
   await expect(page.locator(".resultName")).toBeVisible();
   const selected = page.locator('.heroButton[aria-pressed="true"]');
@@ -61,7 +66,7 @@ test("vaciar el pool pide marcar héroes en vez de recomendar al azar", async ({
   }
   await page.waitForLoadState("networkidle");
   await expect(page.locator(".resultName")).toHaveCount(0);
-  await expect(page.getByText(/Marca tu pool de héroes/i)).toBeVisible({ timeout: 10_000 });
+  await expect(page.getByText(/Marca tu pool/i)).toBeVisible({ timeout: 10_000 });
 });
 
 test("cambiar enemigos visibles cambia el pick recomendado", async ({ page }) => {
@@ -77,13 +82,36 @@ test("cambiar enemigos visibles cambia el pick recomendado", async ({ page }) =>
   await expect(page.locator(".resultName")).not.toHaveText("Viper", { timeout: 10_000 });
 });
 
-test("navegación entre las pestañas principales", async ({ page }) => {
+test("navegacion entre las pestanas principales usa rutas reales", async ({ page }) => {
   await gotoApp(page);
   await page.getByRole("button", { name: /Patch Coach/ }).click();
+  await expect(page).toHaveURL(/\/patch$/);
   await expect(page.locator(".toolTitle")).toContainText(/parche/i);
+
   await page.getByRole("button", { name: /Vision Coach/ }).click();
+  await expect(page).toHaveURL(/\/vision$/);
   await expect(page.locator(".toolTitle")).toContainText(/vision/i);
+
   await page.getByRole("button", { name: /Replay Analysis/ }).click();
+  await expect(page).toHaveURL(/\/replay$/);
+  await expect(page.locator(".toolTitle")).toContainText(/post-partida/i);
+});
+
+test("cada modo tiene ruta directa", async ({ page }) => {
+  await page.goto("/draft");
+  await expect(page.locator('[data-app-ready="true"]')).toBeVisible();
+  await expect(page.locator(".toolTitle")).toContainText(/draft/i);
+
+  await page.goto("/patch");
+  await expect(page.locator('[data-app-ready="true"]')).toBeVisible();
+  await expect(page.locator(".toolTitle")).toContainText(/parche/i);
+
+  await page.goto("/vision");
+  await expect(page.locator('[data-app-ready="true"]')).toBeVisible();
+  await expect(page.locator(".toolTitle")).toContainText(/vision/i);
+
+  await page.goto("/replay");
+  await expect(page.locator('[data-app-ready="true"]')).toBeVisible();
   await expect(page.locator(".toolTitle")).toContainText(/post-partida/i);
 });
 
@@ -96,16 +124,16 @@ test("vision coach permite seleccionar escenarios", async ({ page }) => {
   await expect(page.locator(".panelTitle").filter({ hasText: "Roshan late" })).toBeVisible();
 });
 
-test("replay: un match ID inválido muestra un error claro", async ({ page }) => {
-  await gotoApp(page);
-  await page.getByRole("button", { name: /Replay Analysis/ }).click();
+test("replay: un match ID invalido muestra un error claro", async ({ page }) => {
+  await page.goto("/replay");
+  await expect(page.locator('[data-app-ready="true"]')).toBeVisible();
   await page.locator("#matchIdInput").fill("123");
   await page.locator(".runActionBtn").click();
   await expect(page.locator(".displayPanelBody .emptyStateTitle")).toContainText(/no se pudo/i);
-  await expect(page.locator(".displayPanelBody .emptyStateText")).toContainText(/inválido/i);
+  await expect(page.locator(".displayPanelBody .emptyStateText")).toContainText(/inv/i);
 });
 
-test("la página de privacidad carga", async ({ page }) => {
+test("la pagina de privacidad carga", async ({ page }) => {
   await page.goto("/privacidad");
   await expect(page.locator(".legalTitle")).toContainText("Privacidad");
   await page.getByRole("link", { name: /Volver al coach/ }).click();

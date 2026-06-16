@@ -11,6 +11,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
 import { toast, Toaster } from "sonner";
 import {
@@ -44,9 +45,16 @@ import { useDraftController } from "@/hooks/useDraftController";
 import { useReplayController } from "@/hooks/useReplayController";
 import { generateMarkdown } from "@/lib/markdown";
 
-type Mode = "draft" | "patch" | "vision" | "replay";
+export type CoachMode = "draft" | "patch" | "vision" | "replay";
 
-const MODE_COPY: Record<Mode, { title: string; subtitle: string }> = {
+const MODE_ROUTES: Record<CoachMode, string> = {
+  draft: "/draft",
+  patch: "/patch",
+  vision: "/vision",
+  replay: "/replay",
+};
+
+const MODE_COPY: Record<CoachMode, { title: string; subtitle: string }> = {
   draft: {
     title: "Asistente de draft manual",
     subtitle:
@@ -73,8 +81,9 @@ const ROLES = Object.keys(ROLE_LABELS) as Role[];
 const BRACKETS = Object.keys(BRACKET_LABELS) as Bracket[];
 const STYLES = Object.keys(STYLE_LABELS) as Style[];
 
-export function CoachApp() {
-  const [mode, setMode] = useState<Mode>("draft");
+export function CoachApp({ initialMode = "draft" }: { initialMode?: CoachMode }) {
+  const router = useRouter();
+  const [mode, setMode] = useState<CoachMode>(initialMode);
   const appShellRef = useRef<HTMLElement>(null);
   const draft = useDraftController();
   const replay = useReplayController(draft.role);
@@ -123,6 +132,11 @@ export function CoachApp() {
   }, [replay]);
 
   const copy = MODE_COPY[mode];
+
+  const openMode = (nextMode: CoachMode) => {
+    setMode(nextMode);
+    router.push(MODE_ROUTES[nextMode], { scroll: false });
+  };
 
   const copyMarkdownReport = () => {
     if (!replay.replayReport) return;
@@ -176,16 +190,16 @@ export function CoachApp() {
 
       <div className="mainGrid">
         <nav className="sideNav" aria-label="Modos del coach">
-          <ModeButton active={mode === "draft"} icon={<Crosshair size={18} />} onClick={() => setMode("draft")}>
+          <ModeButton active={mode === "draft"} icon={<Crosshair size={18} />} onClick={() => openMode("draft")}>
             Asistente Draft
           </ModeButton>
-          <ModeButton active={mode === "patch"} icon={<BookOpen size={18} />} onClick={() => setMode("patch")}>
+          <ModeButton active={mode === "patch"} icon={<BookOpen size={18} />} onClick={() => openMode("patch")}>
             Patch Coach
           </ModeButton>
-          <ModeButton active={mode === "vision"} icon={<Eye size={18} />} onClick={() => setMode("vision")}>
+          <ModeButton active={mode === "vision"} icon={<Eye size={18} />} onClick={() => openMode("vision")}>
             Vision Coach
           </ModeButton>
-          <ModeButton active={mode === "replay"} icon={<FileText size={18} />} onClick={() => setMode("replay")}>
+          <ModeButton active={mode === "replay"} icon={<FileText size={18} />} onClick={() => openMode("replay")}>
             Replay Analysis
           </ModeButton>
         </nav>

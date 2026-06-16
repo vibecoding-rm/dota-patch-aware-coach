@@ -189,6 +189,9 @@ export function HeroPicker({
           placeholder="Buscar héroe..."
           value={query}
         />
+        <span className="pickerCount" aria-hidden="true">
+          {selected.length}/{ALL_HEROES.length}
+        </span>
       </div>
       <span id={countId} className="srOnly">
         {visibleHeroes.length} héroes disponibles, {selected.length} marcados.
@@ -256,13 +259,18 @@ export function DraftColumn({
         {title}
         {help && <HelpTip text={help} label={`Ayuda: ${title}`} />}
       </span>
-      <input
-        aria-label={`Buscar en ${title}`}
-        className="textInput pickerSearch"
-        onChange={(event) => setQuery(event.target.value)}
-        placeholder="Buscar héroe..."
-        value={query}
-      />
+      <div className="pickerToolbar">
+        <input
+          aria-label={`Buscar en ${title}`}
+          className="textInput pickerSearch"
+          onChange={(event) => setQuery(event.target.value)}
+          placeholder="Buscar héroe..."
+          value={query}
+        />
+        <span className="pickerCount" aria-hidden="true">
+          {selected.length}/{ALL_HEROES.length}
+        </span>
+      </div>
       <span id={countId} className="srOnly">
         {visibleHeroes.length} héroes disponibles, {selected.length} marcados.
       </span>

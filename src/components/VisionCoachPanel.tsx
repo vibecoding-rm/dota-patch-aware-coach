@@ -1,15 +1,34 @@
 "use client";
 
-import { Eye, ShieldCheck } from "lucide-react";
+import { AlertTriangle, Ban, Clock, Eye, Footprints, ShieldCheck, Target, Users } from "lucide-react";
 import { useMemo, useState } from "react";
 import { ROLE_LABELS, type Role } from "@/data/dota";
-import { VISION_SCENARIOS, type VisionPhase } from "@/data/vision";
+import { VISION_SCENARIOS, type VisionObjective, type VisionPhase } from "@/data/vision";
 
 const PHASE_LABELS: Record<VisionPhase | "all", string> = {
   all: "Todas",
   lane: "Línea",
   mid: "Mid game",
   late: "Late",
+};
+
+const OBJECTIVE_LABELS: Record<VisionObjective, string> = {
+  runes: "Runas de poder",
+  "protect-carry": "Proteger carry",
+  "aggressive-map": "Mapa agresivo",
+  "defensive-map": "Mapa defensivo",
+  roshan: "Roshan",
+  "anti-invis": "Anti-invis / deward",
+  "high-ground": "High ground",
+  smoke: "Smoke",
+  wisdom: "Runa de sabiduría",
+  lotus: "Lotus",
+};
+
+const CONFIDENCE_SCORE: Record<"alta" | "media" | "baja", number> = {
+  alta: 3,
+  media: 2,
+  baja: 1,
 };
 
 export function VisionCoachPanel({
@@ -32,8 +51,10 @@ export function VisionCoachPanel({
   const [selectedScenarioId, setSelectedScenarioId] = useState<string | null>(null);
   const active = scenarios.find((scenario) => scenario.id === selectedScenarioId) ?? scenarios[0] ?? fallbackScenario;
 
+  const confidenceScore = active ? CONFIDENCE_SCORE[active.confidence] : 0;
+
   return (
-    <div className="placeholderGrid patchPanelGrid">
+    <div className="placeholderGrid visionGrid">
       <section className="panel">
         <div className="panelHeader">
           <h3 className="panelTitle">Vision Coach</h3>
@@ -85,52 +106,45 @@ export function VisionCoachPanel({
         <div className="panelBody">
           {active ? (
             <div className="patchNotesContent">
-              <div className="heroMetaGrid">
-                <div className="metaBox">
-                  <span className="metaLabel">Fase</span>
-                  <span className="metaValue goldText">{PHASE_LABELS[active.phase]}</span>
-                </div>
-                <div className="metaBox">
-                  <span className="metaLabel">Confianza</span>
-                  <span className="metaValue">{active.confidence}</span>
-                </div>
+              <span className="notesTitle">Plan accionable</span>
+              <div className="planCardGrid">
+                <article className="planCard">
+                  <div className="planCardHead">
+                    <Eye size={16} />
+                    <span>Observer</span>
+                  </div>
+                  <p>{active.observerPlan}</p>
+                </article>
+                <article className="planCard">
+                  <div className="planCardHead">
+                    <ShieldCheck size={16} />
+                    <span>Sentry</span>
+                  </div>
+                  <p>{active.sentryPlan}</p>
+                </article>
+                <article className="planCard">
+                  <div className="planCardHead">
+                    <Footprints size={16} />
+                    <span>Movimiento</span>
+                  </div>
+                  <p>{active.movementRule}</p>
+                </article>
+                <article className="planCard risk">
+                  <div className="planCardHead">
+                    <AlertTriangle size={16} />
+                    <span>Riesgo</span>
+                  </div>
+                  <p>{active.risk}</p>
+                </article>
               </div>
 
-              <div className="notesBlock">
-                <span className="notesTitle">Plan accionable</span>
-                <ul className="notesList">
-                  <li>
-                    <Eye size={16} />
-                    <p>
-                      <strong>Observer:</strong> {active.observerPlan}
-                    </p>
-                  </li>
-                  <li>
-                    <ShieldCheck size={16} />
-                    <p>
-                      <strong>Sentry:</strong> {active.sentryPlan}
-                    </p>
-                  </li>
-                  <li>
-                    <span className="noteBullet">•</span>
-                    <p>
-                      <strong>Movimiento:</strong> {active.movementRule}
-                    </p>
-                  </li>
-                  <li>
-                    <span className="noteBullet">•</span>
-                    <p>
-                      <strong>Riesgo:</strong> {active.risk}
-                    </p>
-                  </li>
-                  <li>
-                    <span className="noteBullet">•</span>
-                    <p>
-                      <strong>No hacer:</strong> {active.doNot}
-                    </p>
-                  </li>
-                </ul>
-              </div>
+              <article className="planCard danger planCardWide">
+                <div className="planCardHead">
+                  <Ban size={16} />
+                  <span>No hacer</span>
+                </div>
+                <p>{active.doNot}</p>
+              </article>
 
               <div className="tacticalAudit">
                 <span className="notesTitle">Fuente</span>
@@ -146,6 +160,70 @@ export function VisionCoachPanel({
             <div className="emptyState">
               <Eye size={32} />
               <p>No hay escenarios para este filtro.</p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <section className="panel">
+        <div className="panelHeader">
+          <h3 className="panelTitle">Resumen táctico</h3>
+          <p className="panelNote">Lectura rápida antes de plantar visión.</p>
+        </div>
+        <div className="panelBody">
+          {active ? (
+            <div className="visionSummary">
+              <div className="summaryRow">
+                <span className="summaryLabel">Confianza</span>
+                <span className="confidenceStars" aria-label={`Confianza ${active.confidence}`}>
+                  {[1, 2, 3].map((step) => (
+                    <span key={step} className={`star ${step <= confidenceScore ? "on" : ""}`}>
+                      ★
+                    </span>
+                  ))}
+                </span>
+              </div>
+
+              <div className="summaryChips">
+                <span className="summaryChip">
+                  <Target size={13} />
+                  {OBJECTIVE_LABELS[active.objective]}
+                </span>
+                <span className="summaryChip">
+                  <Clock size={13} />
+                  {PHASE_LABELS[active.phase]}
+                </span>
+              </div>
+
+              <div className="summaryBlock">
+                <span className="summaryBlockLabel">
+                  <Clock size={14} />
+                  Ventana de tiempo
+                </span>
+                <p>{active.timing}</p>
+              </div>
+
+              <div className="summaryBlock">
+                <span className="summaryBlockLabel">
+                  <Users size={14} />
+                  Roles que aplican
+                </span>
+                <div className="summaryRoleChips">
+                  {active.roles.map((scenarioRole) => (
+                    <span
+                      key={scenarioRole}
+                      className={`summaryRoleChip ${scenarioRole === role ? "current" : ""}`}
+                    >
+                      {ROLE_LABELS[scenarioRole]}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="emptyState">
+              <Target size={32} />
+              <p>Selecciona un escenario.</p>
             </div>
           )}
         </div>
