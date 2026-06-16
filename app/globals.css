@@ -22,8 +22,19 @@
   --blue: #3182ce;
   --purple: #805ad5;
   --purple-dark: #44337a;
-  
+
+  /* Duality de Dota: Dire (rojo, peligro/marca), Radiant (teal, positivo/wins),
+     y el oro de la economía para el score y lo premium. */
+  --radiant: #2dd4bf;
+  --radiant-deep: #0f766e;
+  --gold: #f0b429;
+  --gold-soft: #fbd38d;
+
   --shadow: 0 15px 30px rgba(0, 0, 0, 0.6), 0 5px 15px rgba(0, 0, 0, 0.4);
+  --glass: rgba(18, 20, 27, 0.55);
+  --glass-line: rgba(255, 255, 255, 0.08);
+  --font-display: "Chakra Petch", ui-sans-serif, system-ui, sans-serif;
+  --font-body: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
@@ -40,37 +51,52 @@ html {
 
 body {
   margin: 0;
-  font-family:
-    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
+  font-family: var(--font-body);
   background: var(--bg-gradient);
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
 }
 
-/* Luces Ambientales (Glows) */
+/* Luces Ambientales (aurora): la niebla viva del mapa. Dire (rojo) a la
+   izquierda, Radiant (teal) a la derecha, en deriva lenta y opuesta. */
 .ambientGlow {
-  position: absolute;
-  width: 50vw;
-  height: 50vw;
+  position: fixed;
+  width: 55vw;
+  height: 55vw;
   border-radius: 50%;
   filter: blur(150px);
   pointer-events: none;
-  opacity: 0.12;
+  opacity: 0.16;
   z-index: 0;
+  will-change: transform, opacity;
 }
 
 .glowTopLeft {
-  top: -20vw;
-  left: -10vw;
+  top: -22vw;
+  left: -12vw;
   background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+  animation: auroraDrift 26s ease-in-out infinite alternate;
 }
 
 .glowTopRight {
-  top: -10vw;
-  right: -10vw;
-  background: radial-gradient(circle, var(--blue) 0%, transparent 70%);
+  top: -8vw;
+  right: -12vw;
+  background: radial-gradient(circle, var(--radiant) 0%, transparent 70%);
+  animation: auroraDrift 32s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes auroraDrift {
+  0% { transform: translate3d(0, 0, 0) scale(1); opacity: 0.12; }
+  50% { transform: translate3d(4vw, 6vw, 0) scale(1.12); opacity: 0.2; }
+  100% { transform: translate3d(-3vw, 2vw, 0) scale(1.04); opacity: 0.14; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glowTopLeft,
+  .glowTopRight {
+    animation: none;
+  }
 }
 
 button,
@@ -441,8 +467,9 @@ button:focus-visible {
 
 .heroButton:hover {
   background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-1px);
+  border-color: rgba(45, 212, 191, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(45, 212, 191, 0.12);
 }
 
 .heroButton.selected {
@@ -1860,3 +1887,110 @@ button:focus-visible {
   }
 }
 
+
+/* ============================================================
+   Tipografía HUD (Chakra Petch) — titulares, cifras y etiquetas
+   tipo readout. El cuerpo y los párrafos siguen en Inter.
+   Bloque al final: gana en cascada sin pelear especificidad.
+   ============================================================ */
+.brandTitle,
+.toolTitle,
+.panelTitle,
+.resultName,
+.scoreBadge,
+.scoreLabel,
+.sectionTitle,
+.detailSectionTitle,
+.metricLabel,
+.primaryLabel,
+.blockLabel,
+.blockLabelHeader,
+.errorCardTitle,
+.errorIndex,
+.faseCardHeader,
+.dayLabel,
+.metaLabel,
+.formSubHeader,
+.academyPreviewTitle,
+.statusPill,
+.navButton,
+.segButton,
+.scoreBadge,
+.scoreBarValue,
+.benchmarkValue,
+.metricValue,
+.scoreBarLabel,
+.tag {
+  font-family: var(--font-display);
+}
+
+/* Chakra Petch llega hasta 700; evitamos negritas sintéticas feas en los
+   titulares grandes y damos un interletrado más técnico. */
+.brandTitle,
+.toolTitle,
+.resultName {
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.scoreBadge {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Elemento firma: anillo radial del score del draft */
+.radialScore {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  display: grid;
+  place-items: center;
+}
+
+.radialScoreSvg {
+  width: 96px;
+  height: 96px;
+  transform: rotate(-90deg);
+  filter: drop-shadow(0 0 8px rgba(240, 180, 41, 0.25));
+}
+
+.radialScoreTrack {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.08);
+  stroke-width: 7;
+}
+
+.radialScoreArc {
+  fill: none;
+  stroke: url(#radialScoreGradient);
+  stroke-width: 7;
+  stroke-linecap: round;
+}
+
+.radialScoreCenter {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 0;
+}
+
+.radialScoreNum {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 1;
+  color: #ffffff;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 14px rgba(240, 180, 41, 0.4);
+}
+
+.radialScoreLabel {
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: var(--gold-soft);
+  margin-top: 2px;
+}

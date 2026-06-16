@@ -3,6 +3,7 @@
 import { AlertTriangle, ChevronRight, TrendingUp, Cpu, Zap } from "lucide-react";
 import { DraftAnalysis } from "@/lib/draft";
 import { ListBlock, Metric, Phase, ScoreBar } from "@/components/fields";
+import { RadialScore } from "@/components/RadialScore";
 
 export function DraftResult({
   analysis,
@@ -75,8 +76,7 @@ export function DraftResult({
                   <h3 className="resultName">{best.hero.name}</h3>
                 </div>
                 <div className="scoreBlock">
-                  <span className="scoreBadge">{best.total}</span>
-                  <span className="scoreLabel">puntos totales</span>
+                  <RadialScore value={best.total} />
                 </div>
               </div>
 
