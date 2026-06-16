@@ -148,7 +148,12 @@ export function SelectField<T extends string>({
         {label}
         {help && <HelpTip text={help} label={`Ayuda: ${label}`} />}
       </span>
-      <select className="selectInput" onChange={(event) => onChange(event.target.value as T)} value={value}>
+      <select
+        aria-label={label}
+        className="selectInput"
+        onChange={(event) => onChange(event.target.value as T)}
+        value={value}
+      >
         {values.map((item) => (
           <option key={item} value={item}>
             {labels[item]}
@@ -161,12 +166,14 @@ export function SelectField<T extends string>({
 
 export function HeroPicker({
   onToggle,
+  onReset,
   role,
   selected,
   title,
   help,
 }: {
   onToggle: (id: string) => void;
+  onReset?: () => void;
   role?: Role;
   selected: string[];
   title: string;
@@ -175,6 +182,7 @@ export function HeroPicker({
   const [query, setQuery] = useState("");
   const roleHeroes = useMemo(() => filterHeroes("", role), [role]);
   const visibleHeroes = useMemo(() => filterHeroes(query, role), [query, role]);
+  const roleLabel = role ? ROLE_LABELS[role] : "todos los roles";
   const titleId = useId();
   const countId = useId();
 
@@ -193,9 +201,19 @@ export function HeroPicker({
           value={query}
         />
         <span className="pickerCount" aria-hidden="true">
-          {selected.length}/{roleHeroes.length}
+          {selected.length} de {roleHeroes.length}
         </span>
+        {onReset && (
+          <button className="pickerResetBtn" onClick={onReset} type="button">
+            Usar sugeridos
+          </button>
+        )}
       </div>
+      <span className="pickerMeta" aria-live="polite">
+        {query.trim()
+          ? `Mostrando ${visibleHeroes.length} de ${roleHeroes.length} héroes de ${roleLabel}.`
+          : `${selected.length} marcados de ${roleHeroes.length} héroes disponibles para ${roleLabel}.`}
+      </span>
       <span id={countId} className="srOnly">
         {visibleHeroes.length} héroes disponibles, {selected.length} marcados.
       </span>
@@ -271,9 +289,14 @@ export function DraftColumn({
           value={query}
         />
         <span className="pickerCount" aria-hidden="true">
-          {selected.length}/{ALL_HEROES.length}
+          {selected.length} de {ALL_HEROES.length}
         </span>
       </div>
+      <span className="pickerMeta" aria-live="polite">
+        {query.trim()
+          ? `Mostrando ${visibleHeroes.length} de ${ALL_HEROES.length} héroes del roster.`
+          : `${selected.length} marcados de ${ALL_HEROES.length} héroes del roster.`}
+      </span>
       <span id={countId} className="srOnly">
         {visibleHeroes.length} héroes disponibles, {selected.length} marcados.
       </span>

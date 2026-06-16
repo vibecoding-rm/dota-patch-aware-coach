@@ -79,6 +79,21 @@ test("vaciar el pool pide marcar heroes en vez de recomendar al azar", async ({ 
   await page.waitForLoadState("networkidle");
   await expect(page.locator(".resultName")).toHaveCount(0);
   await expect(page.getByText(/Marca tu pool/i)).toBeVisible({ timeout: 10_000 });
+  await expect(page.getByText(/0 marcados de/i)).toBeVisible();
+  await page.getByRole("button", { name: /Usar pool sugerido del rol|Usar sugeridos/ }).first().click();
+  await expect(page.locator(".resultName")).toBeVisible({ timeout: 10_000 });
+  await expect(page.getByText(/6 marcados de/i)).toBeVisible();
+});
+
+test("bracket y estilo cambian su estado visible", async ({ page }) => {
+  await gotoApp(page);
+
+  await page.getByRole("radio", { name: "Counter" }).click();
+  await expect(page.getByRole("radio", { name: "Counter" })).toHaveAttribute("aria-checked", "true");
+
+  await page.getByLabel("Rango / Bracket", { exact: true }).selectOption("divine");
+  await expect(page.getByLabel("Rango / Bracket", { exact: true })).toHaveValue("divine");
+  await expect(page.locator(".resultName")).toBeVisible({ timeout: 10_000 });
 });
 
 test("cambiar enemigos visibles cambia el pick recomendado", async ({ page }) => {

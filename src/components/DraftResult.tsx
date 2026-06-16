@@ -22,12 +22,14 @@ export function DraftResult({
   analysis,
   isAnalyzingDraft,
   draftError,
+  onResetPool,
   showDetails,
   toggleDetails,
 }: {
   analysis: DraftAnalysis | null;
   isAnalyzingDraft: boolean;
   draftError: string | null;
+  onResetPool?: () => void;
   showDetails: boolean;
   toggleDetails: () => void;
 }) {
@@ -226,6 +228,11 @@ export function DraftResult({
               Selecciona en <strong>&quot;Mi Pool de Héroes&quot;</strong> al menos un héroe que juegues en
               este rol. El motor solo recomienda picks que tú dominas.
             </p>
+            {onResetPool && (
+              <button className="primaryAction emptyStateAction" onClick={onResetPool} type="button">
+                Usar pool sugerido del rol
+              </button>
+            )}
           </div>
         )}
       </div>

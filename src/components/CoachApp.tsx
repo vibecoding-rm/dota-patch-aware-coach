@@ -133,6 +133,16 @@ export function CoachApp({ initialMode = "draft" }: { initialMode?: CoachMode })
 
   const copy = MODE_COPY[mode];
 
+  const changeDraftRole = (nextRole: Role) => {
+    draft.setRole(nextRole);
+    toast.message(`Pool actualizado para ${ROLE_LABELS[nextRole]}.`);
+  };
+
+  const resetDraftPool = () => {
+    draft.resetHeroPool();
+    toast.success(`Pool sugerido de ${ROLE_LABELS[draft.role]} restaurado.`);
+  };
+
   const openMode = (nextMode: CoachMode) => {
     setMode(nextMode);
     router.push(MODE_ROUTES[nextMode], { scroll: false });
@@ -231,7 +241,7 @@ export function CoachApp({ initialMode = "draft" }: { initialMode?: CoachMode })
                     values={ROLES}
                     labels={ROLE_LABELS}
                     value={draft.role}
-                    onChange={draft.setRole}
+                    onChange={changeDraftRole}
                     help="Tu posición en la partida. Cambia qué héroes se sugieren y cómo se puntúa cada uno."
                   />
                   <SelectField
@@ -252,6 +262,7 @@ export function CoachApp({ initialMode = "draft" }: { initialMode?: CoachMode })
                   />
 
                   <HeroPicker
+                    onReset={resetDraftPool}
                     role={draft.role}
                     title="Mi Pool de Héroes"
                     selected={draft.heroPool}
@@ -280,6 +291,7 @@ export function CoachApp({ initialMode = "draft" }: { initialMode?: CoachMode })
                 analysis={draft.analysis}
                 isAnalyzingDraft={draft.isAnalyzingDraft}
                 draftError={draft.draftError}
+                onResetPool={resetDraftPool}
                 showDetails={draft.showDraftDetails}
                 toggleDetails={() => draft.setShowDraftDetails(!draft.showDraftDetails)}
               />

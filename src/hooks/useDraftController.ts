@@ -55,6 +55,11 @@ export function useDraftController() {
     setShowDraftDetails(false);
   };
 
+  const resetHeroPool = () => {
+    setHeroPool(defaultHeroPoolForRole(role));
+    setShowDraftDetails(false);
+  };
+
   return {
     role,
     setRole: setDraftRole,
@@ -64,6 +69,7 @@ export function useDraftController() {
     setStyle,
     heroPool,
     setHeroPool,
+    resetHeroPool,
     allies,
     setAllies,
     enemies,
