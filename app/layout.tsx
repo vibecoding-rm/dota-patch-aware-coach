@@ -21,9 +21,9 @@ const body = Inter({
 });
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-const TITLE = "Dota Patch-Aware Coach";
+const TITLE = "Dota Patch-Aware Coach · tu coach personal de Dota 2";
 const DESCRIPTION =
-  "Asistente de draft, coach de parches y análisis post-partida para Dota 2 con datos reales de OpenDota.";
+  "Tu coach personal de Dota 2: asistente de draft, coach de parches y análisis post-partida con datos reales de OpenDota.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
