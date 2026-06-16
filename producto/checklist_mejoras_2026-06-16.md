@@ -51,14 +51,14 @@ datos inventados por IA.
 
 ## Bloque 3 - Mi hero pool semanal
 
-- [ ] Clasificar el pool del usuario en:
-  - [ ] jugar ahora;
-  - [ ] jugar si el draft acompana;
-  - [ ] pausar esta semana;
-  - [ ] aprender como backup.
-- [ ] Cruzar comfort, rol, dificultad, patch value y bracket.
-- [ ] Agregar atribucion de fuente cuando se use meta externo.
-- [ ] Mostrar 3 acciones concretas para la semana.
+- [x] Clasificar el pool del usuario en:
+  - [x] jugar ahora;
+  - [x] jugar si el draft acompana;
+  - [x] pausar esta semana;
+  - [x] aprender como backup.
+- [x] Cruzar comfort, rol, dificultad, patch value y bracket.
+- [x] Agregar atribucion de fuente cuando se use meta externo.
+- [x] Mostrar 3 acciones concretas para la semana.
 
 ## Bloque 4 - Reporte post-partida por rol v2
 
@@ -95,9 +95,9 @@ datos inventados por IA.
   - [x] recuperar ancho de navegacion lateral;
   - [x] mostrar el resultado antes que el formulario en mobile;
   - [x] compactar status pills en mobile.
-- [ ] Medir `audit:web` contra build de produccion (`npm run build && npm run start`) antes de fijar thresholds de performance.
-- [ ] Probar una variante v2 de draft con hero pool y aliados/enemigos en tabs o drawer.
-- [ ] Convertir auditoria web en artifact no bloqueante de GitHub Actions si se mantiene util.
+- [x] Medir `audit:web` contra build de produccion (`npm run build && npm run start`) antes de fijar thresholds de performance.
+- [x] Probar una variante v2 de draft con hero pool y aliados/enemigos en tabs o drawer.
+- [x] Convertir auditoria web en artifact no bloqueante de GitHub Actions si se mantiene util.
 
 ## Fuera de alcance hasta validar demanda
 

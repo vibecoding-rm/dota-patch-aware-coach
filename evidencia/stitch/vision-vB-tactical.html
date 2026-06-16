@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Vision Coach - Dota Patch-Aware Coach</title>
+<!-- Fonts & Icons -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config injected from system prompt -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                            "primary": "#e53e3e",
+                            "primary-container": "#fc8181",
+                            "secondary": "#f0b429",
+                            "tertiary": "#2dd4bf",
+                            "background": "#07080a",
+                            "surface": "#121316",
+                            "surface-variant": "#2d3748",
+                            "surface-container-low": "#1a202c",
+                            "surface-container": "#2d3748",
+                            "surface-container-high": "#4a5568",
+                            "surface-bright": "#4a5568",
+                            "on-background": "#e2e8f0",
+                            "on-surface": "#e2e8f0",
+                            "on-surface-variant": "#a0aec0",
+                            "outline": "#718096",
+                            "outline-variant": "#4a5568",
+                            "error": "#f56565",
+                            "error-container": "#9b2c2c"
+                    },
+                    "borderRadius": {
+                            "DEFAULT": "0.25rem",
+                            "lg": "0.5rem",
+                            "xl": "0.75rem",
+                            "full": "9999px"
+                    },
+                    "spacing": {
+                            "sm": "16px",
+                            "lg": "40px",
+                            "xl": "64px",
+                            "margin-desktop": "48px",
+                            "md": "24px",
+                            "gutter": "20px",
+                            "xs": "8px",
+                            "margin-mobile": "16px",
+                            "base": "4px"
+                    },
+                    "fontFamily": {
+                            "stats-numeric": [
+                                    "JetBrains Mono"
+                            ],
+                            "headline-lg": [
+                                    "Chakra Petch", "sans-serif"
+                            ],
+                            "display-xl": [
+                                    "Chakra Petch", "sans-serif"
+                            ],
+                            "body-md": [
+                                    "Inter", "sans-serif"
+                            ],
+                            "body-lg": [
+                                    "Inter", "sans-serif"
+                            ],
+                            "label-caps": [
+                                    "JetBrains Mono"
+                            ],
+                            "headline-md": [
+                                    "Chakra Petch", "sans-serif"
+                            ]
+                    },
+                    "fontSize": {
+                            "stats-numeric": [
+                                    "20px",
+                                    {
+                                            "lineHeight": "1",
+                                            "fontWeight": "700"
+                                    }
+                            ],
+                            "headline-lg": [
+                                    "32px",
+                                    {
+                                            "lineHeight": "1.2",
+                                            "fontWeight": "700"
+                                    }
+                            ],
+                            "display-xl": [
+                                    "48px",
+                                    {
+                                            "lineHeight": "1.1",
+                                            "letterSpacing": "-0.02em",
+                                            "fontWeight": "800"
+                                    }
+                            ],
+                            "body-md": [
+                                    "16px",
+                                    {
+                                            "lineHeight": "1.5",
+                                            "fontWeight": "400"
+                                    }
+                            ],
+                            "body-lg": [
+                                    "18px",
+                                    {
+                                            "lineHeight": "1.6",
+                                            "fontWeight": "400"
+                                    }
+                            ],
+                            "label-caps": [
+                                    "12px",
+                                    {
+                                            "lineHeight": "1",
+                                            "letterSpacing": "0.08em",
+                                            "fontWeight": "600"
+                                    }
+                            ],
+                            "headline-md": [
+                                    "24px",
+                                    {
+                                            "lineHeight": "1.3",
+                                            "fontWeight": "600"
+                                    }
+                            ]
+                    }
+            },
+                },
+            }
+    </script>
+<style>
+        /* Custom Styles for Tactical Glassmorphism */
+        body {
+            background-color: #07080a; 
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(229, 62, 62, 0.03), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(45, 212, 191, 0.03), transparent 25%);
+            background-attachment: fixed;
+            color: theme('colors.on-background');
+        }
+        
+        .glass-panel {
+            background: rgba(27, 28, 30, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: theme('borderRadius.lg');
+        }
+        
+        .glass-panel-active {
+            background: rgba(229, 62, 62, 0.05);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-left: 2px solid theme('colors.primary');
+            box-shadow: inset 20px 0 20px -20px rgba(229, 62, 62, 0.2);
+            border-radius: theme('borderRadius.DEFAULT');
+        }
+
+        .tactical-btn {
+            background: theme('colors.primary');
+            color: #ffffff;
+            border-radius: theme('borderRadius.DEFAULT');
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .tactical-btn:hover {
+            box-shadow: 0 0 15px rgba(229, 62, 62, 0.4);
+        }
+
+        /* Material Icons setup */
+        .material-symbols-outlined {
+          font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: theme('colors.surface');
+        }
+        ::-webkit-scrollbar-thumb {
+            background: theme('colors.surface-variant');
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: theme('colors.outline');
+        }
+    </style>
+</head>
+<body class="min-h-screen flex text-on-background bg-background overflow-hidden font-body-md text-body-md">
+<!-- 1. Shared Component: SideNavBar -->
+<nav class="fixed left-0 top-0 h-full w-16 bg-surface dark:bg-surface border-r border-outline-variant bg-surface-container-low/80 backdrop-blur-md shadow-md flex flex-col items-center py-sm space-y-md z-50">
+<!-- Brand Logo Area -->
+<div class="mb-xl flex flex-col items-center group cursor-pointer">
+<div class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center mb-xs border border-outline/30 group-hover:border-primary/50 transition-colors">
+<span class="material-symbols-outlined text-primary font-headline-md text-headline-md" data-icon="shield">shield</span>
+</div>
+<span class="text-[8px] font-label-caps text-on-surface-variant group-hover:text-primary transition-colors">v2.4</span>
+</div>
+<!-- Navigation Tabs -->
+<div class="flex flex-col space-y-xs w-full">
+<!-- Draft (Inactive) -->
+<a class="w-full flex justify-center py-md text-on-surface-variant hover:bg-surface-variant/20 hover:text-primary transition-colors active:scale-95 duration-150 relative group" href="#" title="Draft">
+<span class="material-symbols-outlined text-[24px]" data-icon="strategy">strategy</span>
+</a>
+<!-- Patch Coach (Inactive) -->
+<a class="w-full flex justify-center py-md text-on-surface-variant hover:bg-surface-variant/20 hover:text-primary transition-colors active:scale-95 duration-150 relative group" href="#" title="Patch Coach">
+<span class="material-symbols-outlined text-[24px]" data-icon="school">school</span>
+</a>
+<!-- Vision Coach (Active) -->
+<a class="w-full flex justify-center py-md text-primary border-r-2 border-primary bg-primary/10 active:scale-95 duration-150 relative group" href="#" title="Vision Coach">
+<span class="material-symbols-outlined text-[24px] icon-fill" data-icon="visibility">visibility</span>
+</a>
+<!-- Replay Analysis (Inactive) -->
+<a class="w-full flex justify-center py-md text-on-surface-variant hover:bg-surface-variant/20 hover:text-primary transition-colors active:scale-95 duration-150 relative group" href="#" title="Replay Analysis">
+<span class="material-symbols-outlined text-[24px]" data-icon="videocam">videocam</span>
+</a>
+</div>
+</nav>
+<!-- 2. Shared Component: TopAppBar -->
+<header class="fixed top-0 right-0 left-16 h-16 bg-surface dark:bg-surface border-b border-outline-variant bg-surface-container-low/90 backdrop-blur-xl flex justify-between items-center px-lg z-40">
+<div class="flex items-center gap-md">
+<h1 class="font-headline-lg text-headline-lg uppercase tracking-tight text-on-surface m-0 leading-none">DOTA PATCH-AWARE COACH</h1>
+<!-- Optional active context breadcrumb -->
+<span class="text-outline hidden md:inline font-body-md text-body-md mt-1">/ Vision Coach</span>
+</div>
+<div class="flex items-center gap-md">
+<!-- Trailing Actions from JSON -->
+<button class="px-sm py-xs border border-outline-variant rounded hover:bg-surface-variant transition-colors flex items-center gap-xs font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined text-[16px]">tune</span>
+                Role Selector
+            </button>
+<div class="px-sm py-xs bg-surface-container-high rounded text-tertiary border border-tertiary/30 font-label-caps text-label-caps flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]">verified</span>
+                Compliance Badge
+            </div>
+<!-- User Profile Avatar -->
+<div class="w-8 h-8 rounded-full bg-surface-variant overflow-hidden border border-outline/50 ml-sm cursor-pointer hover:border-primary transition-colors">
+<div class="w-full h-full bg-surface-container-high flex items-center justify-center text-on-surface-variant font-label-caps text-label-caps">
+                    U
+                </div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-16 mt-16 flex-1 h-[calc(100vh-64px)] flex overflow-hidden p-md gap-md">
+<!-- Left Column: Scenario List -->
+<section class="w-[320px] flex-shrink-0 flex flex-col h-full gap-md">
+<!-- Header area -->
+<div class="glass-panel p-md flex flex-col gap-xs">
+<h2 class="font-headline-md text-headline-md text-primary tracking-wide uppercase m-0">VISION COACH MANUAL</h2>
+<p class="font-body-md text-body-md text-on-surface-variant m-0 opacity-80">Herramienta de estudio táctico fuera del juego.</p>
+<!-- Filters -->
+<div class="mt-sm flex flex-wrap gap-xs">
+<button class="px-sm py-xs rounded-full bg-primary/20 text-primary border border-primary/30 font-label-caps text-label-caps transition-colors">Todas</button>
+<button class="px-sm py-xs rounded-full bg-surface-container text-on-surface-variant border border-outline-variant hover:border-outline transition-colors font-label-caps text-label-caps">Línea</button>
+<button class="px-sm py-xs rounded-full bg-surface-container text-on-surface-variant border border-outline-variant hover:border-outline transition-colors font-label-caps text-label-caps">Mid game</button>
+<button class="px-sm py-xs rounded-full bg-surface-container text-on-surface-variant border border-outline-variant hover:border-outline transition-colors font-label-caps text-label-caps">Late</button>
+</div>
+</div>
+<!-- List Area -->
+<div class="flex-1 overflow-y-auto pr-xs flex flex-col gap-xs">
+<!-- Active Item -->
+<div class="glass-panel-active p-sm cursor-pointer flex justify-between items-center group">
+<div class="flex flex-col gap-xs">
+<span class="font-headline-md text-body-lg text-on-surface group-hover:text-primary transition-colors">Runas de mid 2/4/6/8</span>
+<div class="flex gap-xs">
+<span class="text-[10px] uppercase tracking-wider text-secondary bg-secondary/10 px-xs py-base rounded border border-secondary/20">Línea</span>
+<span class="text-[10px] uppercase tracking-wider text-tertiary bg-tertiary/10 px-xs py-base rounded border border-tertiary/20">Core</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary">chevron_right</span>
+</div>
+<!-- Inactive Item 1 -->
+<div class="glass-panel p-sm cursor-pointer flex justify-between items-center group hover:bg-surface-variant/30 transition-colors">
+<div class="flex flex-col gap-xs">
+<span class="font-headline-md text-body-lg text-on-surface-variant group-hover:text-on-surface transition-colors">Smoke desde base</span>
+<div class="flex gap-xs">
+<span class="text-[10px] uppercase tracking-wider text-outline bg-surface-container px-xs py-base rounded border border-outline/20">Mid game</span>
+</div>
+</div>
+</div>
+<!-- Inactive Item 2 -->
+<div class="glass-panel p-sm cursor-pointer flex justify-between items-center group hover:bg-surface-variant/30 transition-colors">
+<div class="flex flex-col gap-xs">
+<span class="font-headline-md text-body-lg text-on-surface-variant group-hover:text-on-surface transition-colors">Empuje high ground</span>
+<div class="flex gap-xs">
+<span class="text-[10px] uppercase tracking-wider text-outline bg-surface-container px-xs py-base rounded border border-outline/20">Late game</span>
+</div>
+</div>
+</div>
+<!-- Inactive Item 3 -->
+<div class="glass-panel p-sm cursor-pointer flex justify-between items-center group hover:bg-surface-variant/30 transition-colors">
+<div class="flex flex-col gap-xs">
+<span class="font-headline-md text-body-lg text-on-surface-variant group-hover:text-on-surface transition-colors">Defensa de Roshan</span>
+<div class="flex gap-xs">
+<span class="text-[10px] uppercase tracking-wider text-outline bg-surface-container px-xs py-base rounded border border-outline/20">Mid/Late</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Middle Column: Detail View -->
+<section class="flex-1 glass-panel h-full flex flex-col overflow-hidden relative">
+<!-- decorative blur -->
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+<div class="flex-1 overflow-y-auto p-xl">
+<!-- Detail Header -->
+<div class="mb-lg">
+<h3 class="font-headline-lg text-display-xl text-on-surface mb-md">Runas de mid 2/4/6/8</h3>
+<!-- Meta info row -->
+<div class="flex gap-sm">
+<div class="flex items-center gap-xs bg-surface-container px-sm py-xs rounded border border-outline-variant">
+<span class="material-symbols-outlined text-[16px] text-secondary">schedule</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Fase: </span>
+<span class="font-label-caps text-label-caps text-secondary">Línea</span>
+</div>
+<div class="flex items-center gap-xs bg-surface-container px-sm py-xs rounded border border-outline-variant">
+<span class="material-symbols-outlined text-[16px] text-tertiary">assessment</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Confianza: </span>
+<span class="font-label-caps text-label-caps text-tertiary">Media</span>
+</div>
+</div>
+</div>
+<!-- Actionable Plan -->
+<div class="mb-xl">
+<h4 class="font-label-caps text-label-caps text-outline-variant tracking-widest uppercase mb-md border-b border-outline-variant/30 pb-xs">Plan Accionable</h4>
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-md">
+<!-- Checklist item 1 -->
+<div class="bg-surface-container-low border border-outline/20 p-md rounded-lg flex items-start gap-md hover:border-outline/50 transition-colors">
+<div class="bg-surface-bright w-10 h-10 rounded flex items-center justify-center shrink-0 border border-outline/10 text-on-surface">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</div>
+<div>
+<h5 class="font-headline-md text-body-lg text-on-surface mb-xs">Observer Ward</h5>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">Coloca visión que cubra una de las runas de agua y la rampa alta del enemigo. Evita los obeliscos evidentes; prefiere los bordes de acantilado.</p>
+</div>
+</div>
+<!-- Checklist item 2 -->
+<div class="bg-surface-container-low border border-outline/20 p-md rounded-lg flex items-start gap-md hover:border-outline/50 transition-colors">
+<div class="bg-surface-bright w-10 h-10 rounded flex items-center justify-center shrink-0 border border-outline/10 text-tertiary">
+<span class="material-symbols-outlined text-[20px]">security</span>
+</div>
+<div>
+<h5 class="font-headline-md text-body-lg text-on-surface mb-xs">Sentry Ward</h5>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">Mantén un sentry en tu inventario cerca de los minutos pares. Si el mid rival tiene visión perfecta de tus movimientos hacia la runa, desenwardea inmediatamente.</p>
+</div>
+</div>
+<!-- Checklist item 3 -->
+<div class="bg-surface-container-low border border-outline/20 p-md rounded-lg flex items-start gap-md hover:border-outline/50 transition-colors">
+<div class="bg-surface-bright w-10 h-10 rounded flex items-center justify-center shrink-0 border border-outline/10 text-secondary">
+<span class="material-symbols-outlined text-[20px]">directions_run</span>
+</div>
+<div>
+<h5 class="font-headline-md text-body-lg text-on-surface mb-xs">Movimiento &amp; Riesgo</h5>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">Empuja la línea a X:45 para tener prioridad de rotación. Si los supports rivales están desaparecidos (riesgo medio), no vayas ciegamente por la runa de poder min 6.</p>
+</div>
+</div>
+<!-- Checklist item 4 -->
+<div class="bg-error-container/10 border border-error/30 p-md rounded-lg flex items-start gap-md">
+<div class="bg-error/20 w-10 h-10 rounded flex items-center justify-center shrink-0 border border-error/30 text-error">
+<span class="material-symbols-outlined text-[20px]">block</span>
+</div>
+<div>
+<h5 class="font-headline-md text-body-lg text-error mb-xs">No Hacer</h5>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">No uses tp para volver a la línea si vas a perder la runa de agua del min 4. Guarda el tp por si gankean otras líneas tras el control de runas.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Source Block -->
+<div class="mt-auto pt-md border-t border-outline-variant/30 flex items-center justify-between">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-outline">menu_book</span>
+<div>
+<span class="block font-label-caps text-label-caps text-outline-variant mb-base">FUENTE DE LA ESTRATEGIA</span>
+<span class="block font-body-md text-body-md text-on-surface">Community Meta Guide - Patch 7.35</span>
+</div>
+</div>
+<button class="flex items-center gap-xs text-primary hover:text-primary-container font-label-caps text-label-caps transition-colors">
+                        Abrir fuente
+                        <span class="material-symbols-outlined text-[16px]">open_in_new</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Right Column: Tactical Overview -->
+<section class="w-[300px] flex-shrink-0 flex flex-col h-full gap-md glass-panel p-md">
+<h4 class="font-headline-md text-body-lg text-on-surface uppercase tracking-wide border-b border-outline-variant/30 pb-xs mb-xs">Tactical Overview</h4>
+<div class="flex-1 overflow-y-auto">
+<!-- Mock Minimap Box -->
+<div class="w-full aspect-square bg-surface-container-low rounded-lg border border-outline/30 mb-md relative overflow-hidden flex items-center justify-center">
+<span class="text-outline-variant font-label-caps">Minimap Area</span>
+<!-- Decorative grid/nodes for minimap feel -->
+<div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:20px_20px]"></div>
+<div class="absolute w-3 h-3 bg-secondary rounded-full top-[40%] left-[40%] animate-pulse shadow-[0_0_10px_rgba(240,180,41,0.8)]"></div>
+<div class="absolute w-3 h-3 bg-secondary rounded-full bottom-[40%] right-[40%] animate-pulse shadow-[0_0_10px_rgba(240,180,41,0.8)]"></div>
+</div>
+<!-- Objective Timeline -->
+<h5 class="font-label-caps text-label-caps text-outline-variant tracking-widest uppercase mb-sm">Timeline</h5>
+<div class="flex flex-col gap-sm relative before:absolute before:inset-y-0 before:left-2 before:w-[2px] before:bg-outline-variant/30">
+<div class="flex gap-sm items-start relative z-10">
+<div class="w-4 h-4 rounded-full bg-surface border-2 border-secondary shrink-0 mt-1"></div>
+<div>
+<span class="block font-stats-numeric text-[14px] text-secondary">02:00</span>
+<span class="block font-body-md text-[14px] text-on-surface-variant">Runa de agua (ambos lados)</span>
+</div>
+</div>
+<div class="flex gap-sm items-start relative z-10">
+<div class="w-4 h-4 rounded-full bg-surface border-2 border-secondary shrink-0 mt-1"></div>
+<div>
+<span class="block font-stats-numeric text-[14px] text-secondary">04:00</span>
+<span class="block font-body-md text-[14px] text-on-surface-variant">Runa de agua (ambos lados)</span>
+</div>
+</div>
+<div class="flex gap-sm items-start relative z-10">
+<div class="w-4 h-4 rounded-full bg-surface border-2 border-primary shrink-0 mt-1"></div>
+<div>
+<span class="block font-stats-numeric text-[14px] text-primary">06:00</span>
+<span class="block font-body-md text-[14px] text-on-surface">Runa de Poder (1 lado)</span>
+</div>
+</div>
+<div class="flex gap-sm items-start relative z-10">
+<div class="w-4 h-4 rounded-full bg-surface border-2 border-primary shrink-0 mt-1"></div>
+<div>
+<span class="block font-stats-numeric text-[14px] text-primary">08:00</span>
+<span class="block font-body-md text-[14px] text-on-surface">Runa de Poder (1 lado)</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+</body></html>

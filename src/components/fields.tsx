@@ -337,7 +337,7 @@ const ALL_HEROES_SORTED: DisplayHero[] = [
 function filterHeroes(query: string, role?: Role) {
   const normalized = query.trim().toLowerCase();
   const heroes = role
-    ? ALL_HEROES_SORTED.filter((hero) => hero.curated && hero.roles.includes(role))
+    ? ALL_HEROES_SORTED.filter((hero) => hero.roles.includes(role))
     : ALL_HEROES_SORTED;
   if (!normalized) return heroes;
   return heroes.filter((hero) => {

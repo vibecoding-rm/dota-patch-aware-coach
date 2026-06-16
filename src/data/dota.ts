@@ -480,7 +480,80 @@ export const HEROES: Hero[] = [
   },
 ];
 
-export const HERO_BY_ID = new Map(HEROES.map((hero) => [hero.id, hero]));
+import { HERO_ROSTER } from "./heroRoster.generated";
+// @ts-ignore Si tsc no ve el archivo todavía, lo ignora hasta que termine el build
+import { HERO_DATA_BY_ID } from "./heroData.generated";
+
+export const HERO_BY_ID = new Map<string, Hero>();
+
+const OPENDOTA_ROLE_TO_ROLE: Record<string, Role> = {
+  Carry: "carry",
+  Initiator: "offlane",
+  Disabler: "support4",
+  Support: "support5",
+  Durable: "offlane",
+  Escape: "carry",
+  Nuker: "mid",
+  Pusher: "offlane",
+  Jungler: "carry",
+};
+
+const OPENDOTA_ROLE_TO_TAGS: Record<string, HeroTag[]> = {
+  Disabler: ["stun", "disable"],
+  Initiator: ["initiation", "teamfight"],
+  Pusher: ["push", "towerDamage", "waveClear"],
+  Nuker: ["burst", "waveClear"],
+  Durable: ["sustain"],
+  Carry: ["scaling"],
+  Support: ["save", "vision"],
+};
+
+HERO_ROSTER.forEach((rosterHero) => {
+  const curated = HEROES.find(h => h.id === rosterHero.id);
+  const liveData = HERO_DATA_BY_ID ? HERO_DATA_BY_ID[rosterHero.id] : undefined;
+
+  if (curated) {
+    HERO_BY_ID.set(rosterHero.id, {
+      ...curated,
+      // Usamos datos vivos si existen (Counters, Weak, e Ítems)
+      counters: liveData && liveData.counters.length > 0 ? liveData.counters.slice(0, 5) : curated.counters,
+      weakAgainst: liveData && liveData.weakAgainst.length > 0 ? liveData.weakAgainst.slice(0, 5) : curated.weakAgainst,
+      startingItems: liveData && liveData.startItems.length > 0 ? liveData.startItems : curated.startingItems,
+      firstCore: liveData && liveData.coreItems.length > 0 ? liveData.coreItems : curated.firstCore,
+      patchValue: liveData ? (liveData.overallWin >= 0.52 ? 2 : liveData.overallWin <= 0.48 ? -2 : curated.patchValue) : curated.patchValue,
+    });
+  } else {
+    // Generar héroe en tiempo de ejecución para los no curados
+    const mappedRoles = rosterHero.roles
+      .map((r: string) => OPENDOTA_ROLE_TO_ROLE[r])
+      .filter((r): r is Role => Boolean(r));
+
+    // Mapear roles crudos de OpenDota a Parámetros Tácticos (Tags)
+    const generatedTags = new Set<HeroTag>();
+    rosterHero.roles.forEach((r: string) => {
+      const mappedTags = OPENDOTA_ROLE_TO_TAGS[r];
+      if (mappedTags) mappedTags.forEach(t => generatedTags.add(t));
+    });
+
+    HERO_BY_ID.set(rosterHero.id, {
+      id: rosterHero.id,
+      name: rosterHero.name,
+      roles: mappedRoles.length > 0 ? Array.from(new Set(mappedRoles)) : ["carry"],
+      difficulty: 3,
+      damage: "mixed",
+      tempo: "mid",
+      laneStrength: 3,
+      patchValue: liveData ? (liveData.overallWin >= 0.52 ? 2 : liveData.overallWin <= 0.48 ? -2 : 0) : 0,
+      tags: Array.from(generatedTags),
+      counters: liveData ? liveData.counters.slice(0, 5) : [],
+      weakAgainst: liveData ? liveData.weakAgainst.slice(0, 5) : [],
+      synergies: [],
+      startingItems: liveData && liveData.startItems.length > 0 ? liveData.startItems : ["Tango", "Branches", "Circlet"],
+      firstCore: liveData && liveData.coreItems.length > 0 ? liveData.coreItems : ["Power Treads", "Black King Bar"],
+      lanePlan: "Juega de acuerdo a los tiempos y objetivos de tu rol.",
+    });
+  }
+});
 
 // Barra de percentil de OpenDota: pct va de 0 a 1 (0.27 = mejor que el 27% de
 // los jugadores de ese héroe en esa métrica). valueLabel es el valor crudo ya

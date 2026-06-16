@@ -136,8 +136,31 @@ function scoreHero(hero: Hero, input: DraftInput, ctx: DraftContext): PickScore 
 
   const counterHits = hero.counters.filter((id) => enemyIds.has(id)).length;
   const weakHits = hero.weakAgainst.filter((id) => enemyIds.has(id)).length;
-  const synergyHits = hero.synergies.filter((id) => allyIds.has(id)).length;
-  const comfort = SCORING.comfortBase + styleBonus(hero, input.style, counterHits);
+  const synergyHits = hero.synergies ? hero.synergies.filter((id) => allyIds.has(id)).length : 0;
+  // Aplicamos multiplicadores según el estilo de juego (Paso #1: Arreglar estilos de juego)
+  let mComfort = 1.0;
+  let mCounter = 1.0;
+  let mLane = 1.0;
+  let mSynergy = 1.0;
+  let mRisk = 1.0;
+  
+  if (input.style === "comfort") {
+    mComfort = 2.0;
+  } else if (input.style === "counter") {
+    mCounter = 1.5;
+    mLane = 1.2;
+  } else if (input.style === "safe") {
+    mLane = 1.3;
+    mRisk = 2.0; // Penaliza más fuerte el riesgo
+  } else if (input.style === "aggressive") {
+    mLane = 1.5; // Premia mucho la línea
+    mCounter = 0.8;
+  } else if (input.style === "late") {
+    mRisk = 0.8; // Menos foco en riesgo y más en sobrevivir
+  }
+
+  const comfort = (SCORING.comfortBase + (synergyHits > 0 ? 2 : 0)) * mComfort;
+  
   const missingTagCoverage = REQUIRED_TAGS.filter(
     (need) => !alliedTags.has(need.tag) && hero.tags.includes(need.tag),
   ).length;
@@ -146,21 +169,26 @@ function scoreHero(hero: Hero, input: DraftInput, ctx: DraftContext): PickScore 
     lane.base + hero.laneStrength * lane.perLaneStrength + counterHits * lane.perCounter - weakHits * lane.perWeak,
     lane.min,
     lane.max,
-  );
+  ) * mLane;
+
   const teamSynergy = clamp(
     synergy.base + synergyHits * synergy.perSynergy + missingTagCoverage * synergy.perMissingTag,
     synergy.min,
     synergy.max,
-  );
+  ) * mSynergy;
+
   const counterValue = clamp(
     counterHits * counter.perCounter - weakHits * counter.perWeak,
     counter.min,
     counter.max,
-  );
+  ) * mCounter;
+
   const patchValue = hero.patchValue * SCORING.patchMultiplier;
+  
   const executionRisk = Math.round(
     (hero.difficulty - 1) * SCORING.executionRiskPerDifficulty * SCORING.bracketRiskMultiplier[input.bracket],
-  );
+  ) * mRisk;
+
   const total = Math.round(
     comfort + laneMatchup + teamSynergy + counterValue + patchValue - executionRisk,
   );

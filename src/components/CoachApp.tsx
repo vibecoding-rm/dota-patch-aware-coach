@@ -1,15 +1,6 @@
 "use client";
 
-import {
-  BarChart3,
-  BookOpen,
-  Crosshair,
-  Eye,
-  FileText,
-  Gauge,
-  Swords,
-  TrendingUp,
-} from "lucide-react";
+import { Calendar, Crosshair, Eye, FileText, Gauge, Swords, TrendingUp, BarChart3, BookOpen } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
@@ -40,16 +31,18 @@ import { track } from "@/lib/analytics";
 import { PatchCoachPanel } from "@/components/PatchCoachPanel";
 import { ReplayPanel } from "@/components/ReplayPanel";
 import { VisionCoachPanel } from "@/components/VisionCoachPanel";
-import type { VisionPhase } from "@/data/vision";
+import { VisionPhase } from "@/data/vision";
+import { WeeklyPoolPanel } from "@/components/WeeklyPoolPanel";
 import { useDraftController } from "@/hooks/useDraftController";
 import { useReplayController } from "@/hooks/useReplayController";
 import { generateMarkdown } from "@/lib/markdown";
 
-export type CoachMode = "draft" | "patch" | "vision" | "replay";
+export type CoachMode = "draft" | "patch" | "weekly" | "vision" | "replay";
 
 const MODE_ROUTES: Record<CoachMode, string> = {
   draft: "/draft",
   patch: "/patch",
+  weekly: "/weekly",
   vision: "/vision",
   replay: "/replay",
 };
@@ -64,6 +57,11 @@ const MODE_COPY: Record<CoachMode, { title: string; subtitle: string }> = {
     title: "Coach de parche interactivo",
     subtitle:
       "Consulta cómo afectan las actualizaciones del parche activo a tus héroes favoritos y descubre las builds del meta.",
+  },
+  weekly: {
+    title: "Mi Hero Pool Semanal",
+    subtitle:
+      "Clasifica tus héroes activos según su estado en el parche, tu rol y bracket, devolviendo decisiones concretas.",
   },
   vision: {
     title: "Vision Coach manual",
@@ -88,6 +86,7 @@ export function CoachApp({ initialMode = "draft" }: { initialMode?: CoachMode })
   const draft = useDraftController();
   const replay = useReplayController(draft.role);
   const [copyStatus, setCopyStatus] = useState(false);
+  const [draftTab, setDraftTab] = useState<"config" | "pool" | "draft">("config");
 
   // Patch states
   const [selectedPatchHeroId, setSelectedPatchHeroId] = useState<string>("viper");
@@ -206,6 +205,9 @@ export function CoachApp({ initialMode = "draft" }: { initialMode?: CoachMode })
           <ModeButton active={mode === "patch"} icon={<BookOpen size={18} />} onClick={() => openMode("patch")}>
             Patch Coach
           </ModeButton>
+          <ModeButton active={mode === "weekly"} icon={<Crosshair size={18} />} onClick={() => openMode("weekly")}>
+            Pool Semanal
+          </ModeButton>
           <ModeButton active={mode === "vision"} icon={<Eye size={18} />} onClick={() => openMode("vision")}>
             Vision Coach
           </ModeButton>
@@ -236,54 +238,88 @@ export function CoachApp({ initialMode = "draft" }: { initialMode?: CoachMode })
                   <p className="panelNote">Entrada manual sin overlay. El control sigue estando 100% de tu lado.</p>
                 </div>
                 <div className="panelBody" data-tour="draft-inputs">
-                  <SegmentedField
-                    label="Mi Rol"
-                    values={ROLES}
-                    labels={ROLE_LABELS}
-                    value={draft.role}
-                    onChange={changeDraftRole}
-                    help="Tu posición en la partida. Cambia qué héroes se sugieren y cómo se puntúa cada uno."
-                  />
-                  <SelectField
-                    label="Rango / Bracket"
-                    value={draft.bracket}
-                    onChange={draft.setBracket}
-                    values={BRACKETS}
-                    labels={BRACKET_LABELS}
-                    help="Tu rango de MMR. Ajusta el meta esperado y la dificultad de ejecución que penaliza el motor."
-                  />
-                  <SegmentedField
-                    label="Estilo de Juego"
-                    values={STYLES}
-                    labels={STYLE_LABELS}
-                    value={draft.style}
-                    onChange={draft.setStyle}
-                    help="Cómo te gusta jugar. Reordena las recomendaciones hacia héroes que encajan con tu estilo."
-                  />
-
-                  <HeroPicker
-                    onReset={resetDraftPool}
-                    role={draft.role}
-                    title="Mi Pool de Héroes"
-                    selected={draft.heroPool}
-                    onToggle={(id) => toggleValue(id, draft.heroPool, draft.setHeroPool)}
-                    help="Marca los héroes que dominas. El motor solo recomienda picks de este pool."
-                  />
-
-                  <div className="draftColumns">
-                    <DraftColumn
-                      title="Aliados ya elegidos"
-                      selected={draft.allies}
-                      onToggle={(id) => toggleValue(id, draft.allies, draft.setAllies)}
-                      help="Héroes que ya eligió tu equipo. Suman a la sinergia del pick recomendado."
-                    />
-                    <DraftColumn
-                      title="Enemigos ya elegidos"
-                      selected={draft.enemies}
-                      onToggle={(id) => toggleValue(id, draft.enemies, draft.setEnemies)}
-                      help="Héroes del equipo rival. El motor premia picks que los countean."
-                    />
+                  <div className="tabNav" style={{ display: 'flex', gap: '8px', marginBottom: '16px', borderBottom: '1px solid var(--border-color)', paddingBottom: '8px' }}>
+                    <button 
+                      type="button" 
+                      onClick={() => setDraftTab("config")}
+                      style={{ padding: '8px 16px', background: draftTab === "config" ? 'var(--bg-elevated)' : 'transparent', borderRadius: '4px', border: '1px solid transparent', borderColor: draftTab === "config" ? 'var(--border-color)' : 'transparent', color: draftTab === "config" ? 'var(--text-bright)' : 'var(--text-dim)', fontWeight: draftTab === "config" ? 600 : 400 }}
+                    >
+                      Configuración
+                    </button>
+                    <button 
+                      type="button" 
+                      onClick={() => setDraftTab("pool")}
+                      style={{ padding: '8px 16px', background: draftTab === "pool" ? 'var(--bg-elevated)' : 'transparent', borderRadius: '4px', border: '1px solid transparent', borderColor: draftTab === "pool" ? 'var(--border-color)' : 'transparent', color: draftTab === "pool" ? 'var(--text-bright)' : 'var(--text-dim)', fontWeight: draftTab === "pool" ? 600 : 400 }}
+                    >
+                      Mi Pool
+                    </button>
+                    <button 
+                      type="button" 
+                      onClick={() => setDraftTab("draft")}
+                      style={{ padding: '8px 16px', background: draftTab === "draft" ? 'var(--bg-elevated)' : 'transparent', borderRadius: '4px', border: '1px solid transparent', borderColor: draftTab === "draft" ? 'var(--border-color)' : 'transparent', color: draftTab === "draft" ? 'var(--text-bright)' : 'var(--text-dim)', fontWeight: draftTab === "draft" ? 600 : 400 }}
+                    >
+                      Picks
+                    </button>
                   </div>
+
+                  {draftTab === "config" && (
+                    <div className="animate-fade-in">
+                      <SegmentedField
+                        label="Mi Rol"
+                        values={ROLES}
+                        labels={ROLE_LABELS}
+                        value={draft.role}
+                        onChange={changeDraftRole}
+                        help="Tu posición en la partida. Cambia qué héroes se sugieren y cómo se puntúa cada uno."
+                      />
+                      <SelectField
+                        label="Rango / Bracket"
+                        value={draft.bracket}
+                        onChange={draft.setBracket}
+                        values={BRACKETS}
+                        labels={BRACKET_LABELS}
+                        help="Tu rango de MMR. Ajusta el meta esperado y la dificultad de ejecución que penaliza el motor."
+                      />
+                      <SegmentedField
+                        label="Estilo de Juego"
+                        values={STYLES}
+                        labels={STYLE_LABELS}
+                        value={draft.style}
+                        onChange={draft.setStyle}
+                        help="Cómo te gusta jugar. Reordena las recomendaciones hacia héroes que encajan con tu estilo."
+                      />
+                    </div>
+                  )}
+
+                  {draftTab === "pool" && (
+                    <div className="animate-fade-in">
+                      <HeroPicker
+                        onReset={resetDraftPool}
+                        role={draft.role}
+                        title="Mi Pool de Héroes"
+                        selected={draft.heroPool}
+                        onToggle={(id) => toggleValue(id, draft.heroPool, draft.setHeroPool)}
+                        help="Marca los héroes que dominas. El motor solo recomienda picks de este pool."
+                      />
+                    </div>
+                  )}
+
+                  {draftTab === "draft" && (
+                    <div className="draftColumns animate-fade-in">
+                      <DraftColumn
+                        title="Aliados ya elegidos"
+                        selected={draft.allies}
+                        onToggle={(id) => toggleValue(id, draft.allies, draft.setAllies)}
+                        help="Héroes que ya eligió tu equipo. Suman a la sinergia del pick recomendado."
+                      />
+                      <DraftColumn
+                        title="Enemigos ya elegidos"
+                        selected={draft.enemies}
+                        onToggle={(id) => toggleValue(id, draft.enemies, draft.setEnemies)}
+                        help="Héroes del equipo rival. El motor premia picks que los countean."
+                      />
+                    </div>
+                  )}
                 </div>
               </section>
 
@@ -303,6 +339,14 @@ export function CoachApp({ initialMode = "draft" }: { initialMode?: CoachMode })
               heroPool={draft.heroPool}
               selectedHeroId={selectedPatchHeroId}
               onSelectHero={setSelectedPatchHeroId}
+            />
+          )}
+
+          {mode === "weekly" && (
+            <WeeklyPoolPanel
+              heroPool={draft.heroPool}
+              role={draft.role}
+              bracket={draft.bracket}
             />
           )}
 
