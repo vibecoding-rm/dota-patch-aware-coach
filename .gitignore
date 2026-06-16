@@ -37,6 +37,15 @@ pnpm-debug.log*
 *.token
 secrets/
 
+# Local credential dumps / deployment notes
+git .txt
+git .rar
+*token*.txt
+*secret*.txt
+*credentials*.txt
+*vercel*.txt
+*github*.txt
+
 # Generated outputs
 tmp/
 temp/

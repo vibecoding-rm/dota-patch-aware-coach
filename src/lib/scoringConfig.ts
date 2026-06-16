@@ -8,11 +8,11 @@ export const SCORING = {
   styleBonusFull: 4,
   styleBonusPartial: 1,
 
-  lane: { base: 8, perLaneStrength: 3, perCounter: 3, perWeak: 5, min: 0, max: 24 },
-  synergy: { base: 8, perSynergy: 4, perMissingTag: 3, min: 0, max: 22 },
-  counter: { perCounter: 6, perWeak: 4, min: -8, max: 18 },
+  lane: { base: 8, perLaneStrength: 3, perCounter: 5, perWeak: 8, min: 0, max: 24 },
+  synergy: { base: 8, perSynergy: 4, perMissingTag: 4, min: 0, max: 24 },
+  counter: { perCounter: 10, perWeak: 8, min: -16, max: 24 },
 
-  patchMultiplier: 4,
+  patchMultiplier: 2,
   executionRiskPerDifficulty: 3,
 
   avoid: { totalBelow: 42, riskCountAtLeast: 3 },

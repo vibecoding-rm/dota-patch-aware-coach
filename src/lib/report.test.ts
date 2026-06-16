@@ -95,8 +95,9 @@ describe("buildFacts + buildDeterministicReport", () => {
 
   it("no regaña a un support por net worth, daño a torres ni last hits bajos", () => {
     const me = player({ netWorth: 6000, towerDamage: 200, lastHits: 40, gpm: 500 });
-    const facts = buildFacts(match(me, 20000), me, { question: "q", role: "Support" });
-    expect(facts.role).toBe("Support");
+    const facts = buildFacts(match(me, 20000), me, { question: "q", role: "support5" });
+    expect(facts.role).toBe("Support 5");
+    expect(facts.roleGroup).toBe("support5");
     expect(facts.flags).not.toContain("net-worth-bajo-vs-carry");
     expect(facts.flags).not.toContain("dano-torres-bajo");
     expect(facts.flags).not.toContain("last-hits-bajos");
@@ -115,5 +116,23 @@ describe("buildFacts + buildDeterministicReport", () => {
     const facts = buildFacts(match(me, 14000), me, { question: "¿perdí la línea?" });
     const report = buildDeterministicReport(facts, "¿perdí la línea?");
     expect(report.question).toBe("¿perdí la línea?");
+  });
+
+  it("usa fallbacks de support para reportes de support 4/5", () => {
+    const me = player({ deaths: 8, kda: 2.1, netWorth: 5000, towerDamage: 0 });
+    const facts = buildFacts(match(me, 16000), me, { question: "q", role: "support4" });
+    const report = buildDeterministicReport(facts, "q");
+    expect(facts.flags).toContain("soporte-muere-sin-tempo");
+    expect(report.errors.some((error) => error.title.includes("support"))).toBe(true);
+    expect(report.plan[0]).toContain("wards");
+  });
+
+  it("usa diagnostico especifico para mid", () => {
+    const me = player({ towerDamage: 100, laneRole: 2 });
+    const facts = buildFacts(match(me, 12000), me, { question: "q", role: "mid" });
+    const report = buildDeterministicReport(facts, "q");
+    expect(facts.roleGroup).toBe("mid");
+    expect(facts.flags).toContain("objetivos-bajos-rol");
+    expect(report.errors.some((error) => error.title.includes("mid"))).toBe(true);
   });
 });

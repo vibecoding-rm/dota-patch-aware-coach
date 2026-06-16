@@ -30,6 +30,33 @@ describe("analyzeDraft", () => {
     );
   });
 
+  it("cambia el mejor pick cuando el matchup visible cambia fuerte", () => {
+    const paDraft = analyzeDraft({
+      ...base,
+      style: "counter",
+      heroPool: ["viper", "lina", "zeus"],
+      enemies: ["phantom-assassin"],
+    });
+    const qopDraft = analyzeDraft({
+      ...base,
+      style: "counter",
+      heroPool: ["viper", "lina", "zeus"],
+      enemies: ["queen-of-pain"],
+    });
+
+    expect(paDraft.best?.hero.id).toBe("viper");
+    expect(qopDraft.best?.hero.id).not.toBe(paDraft.best?.hero.id);
+  });
+
+  it("no recomienda heroes ya elegidos por aliados o enemigos", () => {
+    const a = analyzeDraft({
+      ...base,
+      heroPool: ["viper", "lina", "zeus"],
+      enemies: ["viper"],
+    });
+    expect(a.best?.hero.id).not.toBe("viper");
+  });
+
   it("premia la sinergia con aliados ya elegidos", () => {
     const withSynergy = analyzeDraft({ ...base, allies: ["lion"] });
     const without = analyzeDraft({ ...base, allies: [] });

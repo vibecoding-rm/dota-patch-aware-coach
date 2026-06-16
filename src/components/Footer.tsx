@@ -18,10 +18,22 @@ export function Footer() {
 
         <nav className="footerLinks" aria-label="Enlaces">
           <Link href="/privacidad">Privacidad</Link>
+          <Link href="/terminos">Términos</Link>
+          <a
+            href="https://github.com/devmaikelrm/dota-patch-aware-coach"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHub
+          </a>
           <a href="https://www.opendota.com" target="_blank" rel="noopener noreferrer">
             OpenDota
           </a>
-          <a href="https://store.steampowered.com/app/570/Dota_2/" target="_blank" rel="noopener noreferrer">
+          <a
+            href="https://store.steampowered.com/app/570/Dota_2/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Dota 2
           </a>
         </nav>

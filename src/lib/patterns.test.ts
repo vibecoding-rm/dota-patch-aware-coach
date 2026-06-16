@@ -10,6 +10,7 @@ function facts(flags: string[]): ReportFacts {
     result: "Derrota",
     hero: "Bloodseeker",
     role: "Carry",
+    roleGroup: "carry",
     bracket: "No disponible",
     kills: 0,
     deaths: 0,

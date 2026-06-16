@@ -1,7 +1,7 @@
 :root {
   --bg: #07080a;
-  --bg-gradient: radial-gradient(120% 120% at 50% 10%, #151821 0%, #07080a 70%);
-  --surface: rgba(16, 18, 23, 0.75);
+  --bg-gradient: linear-gradient(180deg, #101219 0%, #07080a 55%, #07080a 100%);
+  --surface: rgba(16, 18, 23, 0.7);
   --surface-hover: rgba(24, 27, 35, 0.85);
   --surface-active: rgba(32, 36, 47, 0.95);
   --surface-solid: #101217;
@@ -61,15 +61,7 @@ body {
 /* Luces Ambientales (aurora): la niebla viva del mapa. Dire (rojo) a la
    izquierda, Radiant (teal) a la derecha, en deriva lenta y opuesta. */
 .ambientGlow {
-  position: fixed;
-  width: 55vw;
-  height: 55vw;
-  border-radius: 50%;
-  filter: blur(150px);
-  pointer-events: none;
-  opacity: 0.16;
-  z-index: 0;
-  will-change: transform, opacity;
+  display: none;
 }
 
 .glowTopLeft {
@@ -242,7 +234,7 @@ button:focus-visible {
   align-self: start;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: 8px;
   box-shadow: var(--shadow);
   display: grid;
   gap: 8px;
@@ -319,7 +311,7 @@ button:focus-visible {
 .panel {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: 8px;
   box-shadow: var(--shadow);
   min-width: 0;
   backdrop-filter: blur(12px);
@@ -367,6 +359,11 @@ button:focus-visible {
   grid-template-columns: minmax(0, 0.95fr) minmax(380px, 1.05fr);
 }
 
+.placeholderGrid {
+  display: grid;
+  gap: 20px;
+}
+
 /* Inputs & Form Fields */
 .fieldGroup {
   display: grid;
@@ -375,10 +372,21 @@ button:focus-visible {
 
 .fieldLabel {
   color: #a0aec0;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+
+.pickerToolbar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.pickerSearch {
+  flex: 1;
+  min-width: 0;
 }
 
 .segmented {
@@ -543,7 +551,7 @@ button:focus-visible {
 
 .heroRoles {
   color: var(--muted);
-  font-size: 10px;
+  font-size: 11px;
   margin-top: 2px;
 }
 
@@ -638,7 +646,7 @@ button:focus-visible {
   overflow: hidden;
   background: linear-gradient(135deg, rgba(229, 62, 62, 0.08) 0%, rgba(20, 22, 27, 0.9) 100%);
   border: 1px solid rgba(229, 62, 62, 0.28);
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 20px;
   box-shadow: 0 4px 25px rgba(229, 62, 62, 0.05);
 }
@@ -688,6 +696,13 @@ button:focus-visible {
 
 .scoreBlock {
   text-align: right;
+}
+
+.draftSummaryPills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
 }
 
 .scoreBadge {
@@ -785,6 +800,57 @@ button:focus-visible {
   flex-shrink: 0;
 }
 
+.draftRiskStrip {
+  align-items: flex-start;
+  background: rgba(0, 0, 0, 0.18);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+  padding: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.draftRiskStrip p {
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.quickPlanGrid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.quickPlanCard {
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.quickPlanCard.primary {
+  background: rgba(45, 212, 191, 0.06);
+  border-color: rgba(45, 212, 191, 0.2);
+}
+
+.quickPlanCard .blockLabel {
+  align-items: center;
+  display: inline-flex;
+  gap: 6px;
+}
+
+.quickPlanCard p {
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.45;
+  margin: 0;
+}
+
 /* Detailed Score Bars */
 .scoreDetailsGrid {
   background: rgba(0, 0, 0, 0.2);
@@ -862,7 +928,7 @@ button:focus-visible {
 
 .metricLabel {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -971,6 +1037,7 @@ button:focus-visible {
   justify-content: space-between;
   align-items: center;
   text-align: left;
+  width: 100%;
 }
 
 .patchHeroRow:hover {
@@ -982,6 +1049,38 @@ button:focus-visible {
   background: rgba(255, 255, 255, 0.05);
   border-color: rgba(255, 255, 255, 0.2);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.segmentedControl {
+  display: grid;
+  gap: 6px;
+  grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
+  background: rgba(0, 0, 0, 0.22);
+  padding: 4px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+}
+
+.segmentButton {
+  background: transparent;
+  border-radius: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  min-height: 34px;
+  padding: 6px 8px;
+}
+
+.segmentButton:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.segmentButton.active,
+.segmentButton[aria-pressed="true"] {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.06);
 }
 
 .patchHeroMeta {
@@ -996,7 +1095,7 @@ button:focus-visible {
 }
 
 .patchHeroRoles {
-  font-size: 10px;
+  font-size: 11px;
   color: var(--muted);
 }
 
@@ -1906,7 +2005,7 @@ button:focus-visible {
   }
 
   .sideNav {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     position: static;
   }
   
@@ -1934,6 +2033,7 @@ button:focus-visible {
   .draftColumns,
   .miniGrid,
   .planGrid,
+  .quickPlanGrid,
   .sideNav,
   .errorCardGrid,
   .trainingGrid,

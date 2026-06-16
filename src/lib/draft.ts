@@ -53,7 +53,7 @@ const REQUIRED_TAGS: Array<{ tag: HeroTag; label: string }> = [
 
 const STYLE_BONUS: Record<Style, (hero: Hero) => number> = {
   comfort: () => SCORING.styleBonusFull,
-  counter: (hero) => (hero.counters.length >= 3 ? SCORING.styleBonusFull : SCORING.styleBonusPartial),
+  counter: () => SCORING.styleBonusPartial,
   safe: (hero) => (hero.difficulty <= 2 && hero.laneStrength >= 3 ? SCORING.styleBonusFull : 0),
   aggressive: (hero) =>
     hero.tempo !== "late" && hero.tags.includes("lanePressure") ? SCORING.styleBonusFull : 0,
@@ -89,7 +89,8 @@ export function analyzeDraft(input: DraftInput): DraftAnalysis {
     const candidates = input.heroPool
       .map((id) => HERO_BY_ID.get(id))
       .filter((hero): hero is Hero => Boolean(hero))
-      .filter((hero) => hero.roles.includes(input.role));
+      .filter((hero) => hero.roles.includes(input.role))
+      .filter((hero) => !ctx.allyIds.has(hero.id) && !ctx.enemyIds.has(hero.id));
 
     const scored = candidates
       .map((hero) => scoreHero(hero, input, ctx))
@@ -127,10 +128,10 @@ function scoreHero(hero: Hero, input: DraftInput, ctx: DraftContext): PickScore 
   const { alliedTags, enemyIds, allyIds, enemies } = ctx;
   const { lane, synergy, counter } = SCORING;
 
-  const comfort = SCORING.comfortBase + STYLE_BONUS[input.style](hero);
   const counterHits = hero.counters.filter((id) => enemyIds.has(id)).length;
   const weakHits = hero.weakAgainst.filter((id) => enemyIds.has(id)).length;
   const synergyHits = hero.synergies.filter((id) => allyIds.has(id)).length;
+  const comfort = SCORING.comfortBase + styleBonus(hero, input.style, counterHits);
   const missingTagCoverage = REQUIRED_TAGS.filter(
     (need) => !alliedTags.has(need.tag) && hero.tags.includes(need.tag),
   ).length;
@@ -183,6 +184,13 @@ function scoreHero(hero: Hero, input: DraftInput, ctx: DraftContext): PickScore 
       objective: buildObjectivePlan(hero, input),
     },
   };
+}
+
+function styleBonus(hero: Hero, style: Style, counterHits: number): number {
+  if (style === "counter") {
+    return counterHits > 0 ? SCORING.styleBonusFull : 0;
+  }
+  return STYLE_BONUS[style](hero);
 }
 
 function buildReasons(

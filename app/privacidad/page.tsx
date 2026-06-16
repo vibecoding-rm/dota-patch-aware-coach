@@ -18,45 +18,53 @@ export default function PrivacyPage() {
 
         <h1 className="legalTitle">Privacidad</h1>
         <p className="legalLead">
-          Versión corta: usamos los datos públicos de tu Dota 2 para darte el análisis, y no
-          vendemos nada. Esto es lo que ocurre en detalle.
+          Versión corta: usamos datos públicos de Dota 2 para darte análisis y no vendemos datos de
+          usuarios. Esto es lo que ocurre en detalle.
         </p>
 
         <section className="legalSection">
           <h2>Datos de partidas</h2>
           <p>
-            El análisis de draft y de replays usa datos <strong>públicos</strong> de la API de
-            OpenDota. Solo consultamos la información de la partida o cuenta que tú introduces; no
-            almacenamos tus partidas en ningún servidor nuestro.
+            El análisis de draft y de replays usa datos <strong>públicos</strong> de OpenDota. Solo
+            consultamos la información de la partida o cuenta que tú introduces; el MVP no necesita
+            almacenar tus partidas en servidores propios.
           </p>
         </section>
 
         <section className="legalSection">
           <h2>Login con Steam</h2>
           <p>
-            Si entras con Steam, recibimos tu identificador público (SteamID) mediante OpenID. Lo
-            usamos para cargar tu Account ID y, opcionalmente, mostrar tu nombre y avatar públicos.
-            Guardamos una <strong>cookie de sesión firmada</strong> en tu navegador para mantenerte
-            identificado; no contiene contraseñas. Puedes cerrar sesión cuando quieras y la cookie
-            se elimina.
+            Si entras con Steam, recibimos tu identificador público mediante OpenID. Lo usamos para
+            cargar tu Account ID y, opcionalmente, mostrar tu nombre y avatar públicos. Guardamos
+            una <strong>cookie de sesión firmada</strong> en tu navegador para mantenerte
+            identificado; no contiene contraseñas.
           </p>
         </section>
 
         <section className="legalSection">
           <h2>Analítica</h2>
           <p>
-            Si la analítica está activa, usamos un servicio <strong>sin cookies</strong> (Plausible)
-            que mide eventos agregados y anónimos (por ejemplo, cuántos reportes se generan). No
-            creamos perfiles ni te rastreamos entre sitios.
+            Si la analítica está activa, usamos un servicio sin cookies para medir eventos agregados
+            y anónimos, por ejemplo cuántos reportes se generan. No creamos perfiles ni te
+            rastreamos entre sitios.
           </p>
         </section>
 
         <section className="legalSection">
-          <h2>IA (opcional)</h2>
+          <h2>IA opcional</h2>
           <p>
-            Cuando la redacción con IA está habilitada, enviamos a Claude únicamente las cifras ya
-            anonimizadas de la partida para mejorar el texto del reporte. La IA no recibe tu
-            identidad.
+            Cuando la redacción con IA está habilitada, enviamos únicamente cifras y contexto de la
+            partida necesarios para mejorar el texto del reporte. La IA no debe recibir contraseñas,
+            cookies ni credenciales.
+          </p>
+        </section>
+
+        <section className="legalSection">
+          <h2>Credenciales</h2>
+          <p>
+            No pedimos ni almacenamos contraseñas de Steam, cookies, tokens personales ni claves de
+            API de usuarios. Las claves de despliegue y proveedores deben vivir en variables de
+            entorno privadas, nunca en Git.
           </p>
         </section>
 

@@ -89,6 +89,7 @@ export async function enrichReportWithAI(
     "Reglas duras:",
     "- Solo puedes usar las cifras y hechos que se te entregan en FACTS. No inventes timings, ítems ni eventos que no estén en los datos.",
     "- Si un dato no está disponible, no lo afirmes; habla en términos de los hechos dados.",
+    "- Respeta facts.roleGroup: no evalúes supports como cores, ni carries como supports. El diagnóstico debe priorizar métricas y decisiones propias del rol.",
     "- Mantén el tono accionable: cada error debe tener evidencia, impacto y una corrección concreta.",
     "Entrega el resultado llamando a la herramienta emit_coaching_report, mejorando la redacción de los campos de texto respecto al SCAFFOLD sin alterar ninguna cifra.",
   ].join("\n");

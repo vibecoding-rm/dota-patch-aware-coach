@@ -1,6 +1,7 @@
 "use client";
 
 import { Check } from "lucide-react";
+import { useMemo, useState } from "react";
 import { HEROES, ROLE_LABELS, heroImageUrl } from "@/data/dota";
 import { HelpTip } from "@/components/HelpTip";
 
@@ -104,14 +105,26 @@ export function HeroPicker({
   title: string;
   help?: string;
 }) {
+  const [query, setQuery] = useState("");
+  const visibleHeroes = useMemo(() => filterHeroes(query), [query]);
+
   return (
     <div className="fieldGroup">
       <span className="fieldLabel">
         {title}
         {help && <HelpTip text={help} label={`Ayuda: ${title}`} />}
       </span>
+      <div className="pickerToolbar">
+        <input
+          aria-label={`Buscar en ${title}`}
+          className="textInput pickerSearch"
+          onChange={(event) => setQuery(event.target.value)}
+          placeholder="Buscar héroe..."
+          value={query}
+        />
+      </div>
       <div className="heroGrid">
-        {HEROES.map((hero) => {
+        {visibleHeroes.map((hero) => {
           const isSelected = selected.includes(hero.id);
           const hasBuff = hero.patchValue > 0;
           const hasNerf = hero.patchValue < 0;
@@ -154,14 +167,24 @@ export function DraftColumn({
   title: string;
   help?: string;
 }) {
+  const [query, setQuery] = useState("");
+  const visibleHeroes = useMemo(() => filterHeroes(query), [query]);
+
   return (
     <div className="fieldGroup">
       <span className="fieldLabel">
         {title}
         {help && <HelpTip text={help} label={`Ayuda: ${title}`} />}
       </span>
+      <input
+        aria-label={`Buscar en ${title}`}
+        className="textInput pickerSearch"
+        onChange={(event) => setQuery(event.target.value)}
+        placeholder="Buscar héroe..."
+        value={query}
+      />
       <div className="draftSlots">
-        {HEROES.slice(0, 15).map((hero) => {
+        {visibleHeroes.map((hero) => {
           const isSelected = selected.includes(hero.id);
           return (
             <button
@@ -179,6 +202,15 @@ export function DraftColumn({
       </div>
     </div>
   );
+}
+
+function filterHeroes(query: string) {
+  const normalized = query.trim().toLowerCase();
+  if (!normalized) return HEROES;
+  return HEROES.filter((hero) => {
+    const haystack = `${hero.name} ${hero.roles.map((role) => ROLE_LABELS[role]).join(" ")}`.toLowerCase();
+    return haystack.includes(normalized);
+  });
 }
 
 export function ScoreBar({

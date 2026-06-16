@@ -1,7 +1,14 @@
 "use client";
 
 import { AlertTriangle, BookOpen } from "lucide-react";
-import { HEROES, PATCH_NOTES_BY_HERO, PATCH_STATE, ROLE_LABELS } from "@/data/dota";
+import { HEROES, PATCH_STATE, ROLE_LABELS } from "@/data/dota";
+import {
+  getActivePatch,
+  getGlobalPatchChanges,
+  getPatchChangesForHero,
+  getPatchConfidenceForHero,
+  getPatchRecommendationLabel,
+} from "@/data/patches";
 
 export function PatchCoachPanel({
   heroPool,
@@ -14,6 +21,10 @@ export function PatchCoachPanel({
 }) {
   const heroes = HEROES.filter((hero) => heroPool.includes(hero.id));
   const activeHero = HEROES.find((h) => h.id === selectedHeroId) || heroes[0];
+  const activePatch = getActivePatch();
+  const activeChanges = activeHero ? getPatchChangesForHero(activeHero.id) : [];
+  const globalChanges = getGlobalPatchChanges();
+  const confidence = activeHero ? getPatchConfidenceForHero(activeHero.id) : "baja";
 
   return (
     <div className="placeholderGrid patchPanelGrid">
@@ -27,8 +38,8 @@ export function PatchCoachPanel({
             {heroes.length > 0 ? (
               heroes.map((hero) => {
                 const isActive = hero.id === selectedHeroId;
-                const statusClass = hero.patchValue > 0 ? "buff" : hero.patchValue < 0 ? "nerf" : "neutral";
-                const statusText = hero.patchValue > 0 ? "Priorizar" : hero.patchValue < 0 ? "Evitar" : "Estable";
+                const statusText = getPatchRecommendationLabel(hero.id);
+                const statusClass = statusText === "Priorizar" ? "buff" : statusText === "Revisar" ? "neutral" : "neutral";
                 return (
                   <button
                     key={hero.id}
@@ -56,7 +67,9 @@ export function PatchCoachPanel({
       <section className="panel">
         <div className="panelHeader">
           <h3 className="panelTitle">Detalles del Parche: {activeHero ? activeHero.name : "Selecciona Héroe"}</h3>
-          <p className="panelNote">Evidencia de cambios extraídos del changelog y análisis táctico.</p>
+          <p className="panelNote">
+            Fuente activa: {activePatch.source.label}. Estado: revisión manual, confianza por héroe {confidence}.
+          </p>
         </div>
         <div className="panelBody">
           {activeHero ? (
@@ -65,25 +78,46 @@ export function PatchCoachPanel({
                 <div className="metaBox">
                   <span className="metaLabel">Patch Value</span>
                   <span className={`metaValue ${activeHero.patchValue > 0 ? "greenText" : activeHero.patchValue < 0 ? "redText" : ""}`}>
-                    {activeHero.patchValue > 0 ? `+${activeHero.patchValue} (Buff)` : activeHero.patchValue < 0 ? `${activeHero.patchValue} (Nerf)` : "0 (Sin cambios)"}
+                    {activeHero.patchValue > 0 ? `+${activeHero.patchValue}` : activeHero.patchValue < 0 ? `${activeHero.patchValue}` : "0"} local
                   </span>
                 </div>
                 <div className="metaBox">
-                  <span className="metaLabel">Fuerza en Línea</span>
-                  <span className="metaValue goldText">{"★".repeat(activeHero.laneStrength)}</span>
+                  <span className="metaLabel">Confianza</span>
+                  <span className="metaValue goldText">{confidence}</span>
                 </div>
               </div>
 
               <div className="notesBlock">
-                <span className="notesTitle">Changelog Oficial {PATCH_STATE.version}</span>
+                <span className="notesTitle">Datos versionados {PATCH_STATE.version}</span>
                 <ul className="notesList">
-                  {(PATCH_NOTES_BY_HERO[activeHero.id] || [
-                    "Sin cambios directos en los atributos de este héroe.",
-                    "Afectado únicamente por ajustes globales de economía e ítems neutrales.",
-                  ]).map((note, idx) => (
-                    <li key={idx}>
+                  {[
+                    ...globalChanges,
+                    ...(activeChanges.length > 0
+                      ? activeChanges
+                      : [
+                          {
+                            id: `no-direct-${activeHero.id}`,
+                            summary: `Sin cambio directo registrado para ${activeHero.name} en la base local revisada.`,
+                            kind: "inferencia" as const,
+                            confidence: "baja" as const,
+                            source: activePatch.source,
+                            coachTakeaway:
+                              "Usar plan estándar y evitar conclusiones fuertes hasta revisar el changelog completo del héroe.",
+                          },
+                        ]),
+                  ].map((change) => (
+                    <li key={change.id}>
                       <span className="noteBullet">•</span>
-                      <p>{note}</p>
+                      <p>
+                        <strong>{change.kind}</strong> · {change.summary}
+                        <br />
+                        <small>
+                          Confianza {change.confidence} · Fuente:{" "}
+                          <a href={change.source.url} target="_blank" rel="noreferrer">
+                            {change.source.label}
+                          </a>
+                        </small>
+                      </p>
                     </li>
                   ))}
                 </ul>
@@ -92,11 +126,9 @@ export function PatchCoachPanel({
               <div className="tacticalAudit">
                 <span className="notesTitle">Recomendación del Parche</span>
                 <p className="tacticalDesc">
-                  {activeHero.patchValue > 0
-                    ? `Los buffs recibidos posiciónan a ${activeHero.name} como un pick sólido en este parche. Maximiza su lane presence con ítems como ${activeHero.startingItems.slice(0, 2).join(" y ")} y presióna timings rápidos.`
-                    : activeHero.patchValue < 0
-                    ? `Ten cuidado. Los nerfs directos debilitaron su capacidad de juego en fase de líneas. Considera alternar a otros héroes si ves counters agresivos visibles en el draft.`
-                    : `${activeHero.name} se mantiene balanceado y estable. Conserva su build estándar: ${activeHero.firstCore.join(" ➔ ")}.`}
+                  {activeChanges.length > 0
+                    ? activeChanges[0].coachTakeaway
+                    : `${activeHero.name} no tiene un cambio directo revisado en esta base. Conserva el plan estándar (${activeHero.firstCore.join(" -> ")}) y usa el draft para decidir si conviene jugarlo.`}
                 </p>
               </div>
             </div>

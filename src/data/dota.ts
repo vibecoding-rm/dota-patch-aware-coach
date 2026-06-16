@@ -39,8 +39,8 @@ export type Hero = {
 
 export const PATCH_STATE = {
   version: "7.41d",
-  updatedAt: "2026-06-15",
-  freshness: "Base inicial mock; requiere ingestión de patch notes antes de producción.",
+  updatedAt: "2026-06-16",
+  freshness: "Patch 7.41d versionado con fuente oficial y señales de meta. Cambios finos de héroes/items requieren revisión manual.",
 };
 
 export const ROLE_LABELS: Record<Role, string> = {
@@ -481,53 +481,6 @@ export const HEROES: Hero[] = [
 ];
 
 export const HERO_BY_ID = new Map(HEROES.map((hero) => [hero.id, hero]));
-
-export const PATCH_NOTES_BY_HERO: Record<string, string[]> = {
-  axe: [
-    "+2 Armadura inicial para resistir mejor los ataques físicos en línea.",
-    "El radio de Berserker's Call aumentó de 300 a 315.",
-    "Multiplicador de daño de Counter Helix contra creeps reducido de 1.0 a 0.9."
-  ],
-  "crystal-maiden": [
-    "Velocidad de movimiento base aumentada de 280 a 285.",
-    "Costo de maná de Frostbite reducido de 115/125/135/145 a 100/110/120/130.",
-    "Regeneración de maná propia otorgada por Arcane Aura aumentada en 0.25."
-  ],
-  sniper: [
-    "Daño base de ataque reducido en 3.",
-    "Costo de maná de Shrapnel aumentado de 50 a 65.",
-    "El rango de ataque de Take Aim ahora da 25 unidades menos en el nivel 1."
-  ],
-  "phantom-assassin": [
-    "La ganancia de Agilidad por nivel aumentó de 3.2 a 3.4.",
-    "Costo de maná de Stifling Dagger reducido a 30 en todos los niveles.",
-    "La probabilidad de crítico de Coupe de Grace aumentó de 17% a 18%."
-  ],
-  lion: [
-    "Costo de maná de Earth Spike aumentado en 10 en los primeros niveles.",
-    "El rango de casteo de Hex se redujo de 600 a 575.",
-    "Daño base de Finger of Death aumentado en 50 en nivel 1."
-  ],
-  viper: [
-    "Costo de maná de Poison Attack reducido de 18/20/22/24 a 16/18/20/22.",
-    "Nethertoxin ahora inflige un 5% más de daño máximo.",
-    "Resistencia mágica base aumentada a 30%."
-  ],
-  pudge: [
-    "Rango de Meat Hook reducido en 50 en nivel 1.",
-    "Daño base de Rot reducido en 5 en todos los niveles.",
-    "Armadura inicial reducida en 1."
-  ],
-  juggernaut: [
-    "El daño de Blade Fury aumentó en 10 en todos los niveles.",
-    "El maná base de Juggernaut se incrementó a 300.",
-    "El enfriamiento de Healing Ward se redujo de 60s a 55s."
-  ],
-  mars: [
-    "Daño base de God's Rebuke aumentado de 150% a 165%.",
-    "La duración de la Arena of Blood aumentó de 5/6/7s a 6/7/8s."
-  ]
-};
 
 // Barra de percentil de OpenDota: pct va de 0 a 1 (0.27 = mejor que el 27% de
 // los jugadores de ese héroe en esa métrica). valueLabel es el valor crudo ya

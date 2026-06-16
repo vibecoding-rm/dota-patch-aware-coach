@@ -1,7 +1,9 @@
 import { defineConfig } from "@playwright/test";
 
-// E2E sobre el dev server. Usa el Chrome del sistema (channel "chrome") para no
-// descargar el chromium de Playwright. Reutiliza el server si ya está corriendo.
+const isCI = Boolean(process.env.CI);
+
+// Local runs use the system Chrome channel. CI uses the Chromium browser
+// installed by `npx playwright install --with-deps chromium`.
 export default defineConfig({
   testDir: "./e2e",
   fullyParallel: false,
@@ -11,7 +13,7 @@ export default defineConfig({
   timeout: 30_000,
   use: {
     baseURL: "http://localhost:3000",
-    channel: "chrome",
+    channel: isCI ? undefined : "chrome",
     headless: true,
     trace: "retain-on-failure",
   },

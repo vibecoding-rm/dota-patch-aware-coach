@@ -1,67 +1,105 @@
-# Dota 2 — Patch-Aware Coach
+# Dota Patch-Aware Coach
 
-Proyecto de producto para la comunidad de Dota 2: asistente de draft, coach de
-parche y análisis post-partida. La investigación de producto vive en
-`investigacion/`, `evidencia/` y `producto/`; la app web vive en `app/` y `src/`.
+Patch-aware Dota 2 coaching MVP for draft preparation, patch education, vision
+practice, and post-match reports powered by public match data.
 
-Punto de entrada para investigar/construir producto: lee `AGENTS.md`.
+This is an independent educational tool. It does not read game memory, automate
+inputs, provide prohibited real-time advantage, support boosting, or store player
+credentials. It is not affiliated with Valve Corporation.
 
-## Estado real (lo que ya funciona)
+## What Works
 
-- **Asistente de draft**: motor de scoring determinista y explicable
-  (`src/lib/draft.ts`), con tests.
-- **Coach de parche**: base de héroes versionada (mock 7.41d) en `src/data/dota.ts`.
-- **Análisis post-partida**: integración **real** con OpenDota
-  (`/api/report` → KDA, GPM/XPM, net worth, daño) + redacción del reporte con
-  Claude cuando hay `ANTHROPIC_API_KEY`, con **fallback determinista** si no la
-  hay. La app funciona end-to-end en ambos casos.
-- **Workspace de coach (B2B)**: gestión de alumnos y edición de reportes.
+- Draft assistant with deterministic, explainable scoring.
+- Patch coach with versioned source/confidence metadata.
+- Vision coach with practical warding and map-control scenarios.
+- Post-match reports from public OpenDota data.
+- Optional AI prose enrichment with deterministic fallback.
+- Role-aware coaching logic for carry, mid, offlane, soft support, and hard
+  support.
+- Product research notes in `investigacion/`, `evidencia/`, and `producto/`.
 
-Diagnóstico técnico completo y siguientes pasos:
-`producto/auditoria_senior.md` y `producto/checklist_implementacion.md`.
-
-## Arranque
+## Quick Start
 
 ```bash
 npm install
-cp .env.example .env.local   # opcional: añade ANTHROPIC_API_KEY para IA
-npm run dev                   # http://localhost:3000
+cp .env.example .env.local
+npm run dev
 ```
 
-La app corre sin ninguna API key: el análisis usa datos reales de OpenDota y el
-reporte determinista. Con `ANTHROPIC_API_KEY`, el reporte se redacta con Claude.
+Open `http://localhost:3000`.
+
+The app runs without paid API keys. If no AI provider key is configured, reports
+use the deterministic coach.
 
 ## Scripts
 
 ```bash
-npm run dev         # servidor de desarrollo
-npm run build       # build de producción
-npm run start       # servir el build
-npm run lint        # ESLint (flat config)
-npm run typecheck   # tsc --noEmit
-npm run test        # tests del motor (Vitest)
-npm run test:watch  # tests en modo watch
+npm run dev         # Next.js dev server
+npm run build       # Production build
+npm run start       # Serve production build
+npm run lint        # ESLint
+npm run typecheck   # TypeScript without emit
+npm run test        # Vitest unit tests
+npm run test:e2e    # Playwright E2E tests
 ```
+
+## Environment
+
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `ANTHROPIC_API_KEY` | No | Enables AI-written report prose. |
+| `CLAUDE_MODEL` | No | Anthropic model name for report prose. |
+| `OPENDOTA_API_KEY` | No | Raises OpenDota rate limits. |
+| `NEXT_PUBLIC_SITE_URL` | No | Public site URL for metadata. |
+| `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` | No | Cookie-free analytics domain. |
+| `AUTH_SECRET` | Production | Signs the Steam session cookie. |
+| `STEAM_API_KEY` | No | Shows public Steam name/avatar after login. |
+
+Keep real values in `.env.local`, Vercel environment variables, or GitHub
+secrets. Never commit credentials.
 
 ## API
 
-- `GET /api/match/:id` — resumen normalizado de una partida pública de OpenDota.
-- `POST /api/report` — body `{ matchId, accountId?, role?, question }`; devuelve el
-  reporte de coaching sobre datos reales (con IA o determinista).
+- `GET /api/match/:id` returns a normalized OpenDota match summary.
+- `POST /api/report` accepts `{ matchId, accountId?, role?, question }` and
+  returns a coaching report.
+- `POST /api/draft` evaluates manual ally/enemy draft context.
+- `POST /api/patterns` summarizes repeated player patterns.
 
-## Variables de entorno
+## Repository Structure
 
-| Variable | Obligatoria | Uso |
-| --- | --- | --- |
-| `ANTHROPIC_API_KEY` | No | Activa la redacción del reporte con Claude. |
-| `CLAUDE_MODEL` | No | Modelo de Claude (por defecto `claude-sonnet-4-6`; usa `claude-opus-4-8` para reportes premium). |
-| `OPENDOTA_API_KEY` | No | Sube el rate limit de OpenDota. |
+- `app/`: Next.js routes, API handlers, metadata, and legal pages.
+- `src/components/`: Coach UI by product area.
+- `src/hooks/`: UI state controllers.
+- `src/lib/`: Draft scoring, reports, OpenDota integration, AI, and utilities.
+- `src/data/`: Hero, patch, and vision knowledge bases.
+- `e2e/`: Playwright coverage for core flows.
+- `investigacion/`, `evidencia/`, `producto/`: product validation and roadmap.
 
-## Estructura
+## AI Strategy
 
-- `AGENTS.md`: instrucciones del agente investigador de producto.
-- `investigacion/`, `evidencia/`, `producto/`: investigación, demanda y roadmap.
-- `app/`: rutas y route handlers de Next.js.
-- `src/lib/`: motor de scoring, integración OpenDota, reporte e IA.
-- `src/components/`: UI por dominio (draft, parche, replay, workspace).
-- `src/data/`: base de héroes, parche y plantillas.
+AI is used for explanation and prioritization, not as the source of truth. Facts
+must come from patch data, public APIs, user input, or deterministic code.
+
+See `docs/ai-model-strategy.md` for the current model routing recommendation.
+
+## Compliance Boundary
+
+Allowed:
+
+- manual draft preparation;
+- patch-aware study;
+- public replay analysis;
+- warding education;
+- coach reports and training plans.
+
+Not allowed:
+
+- cheats, memory reading, scripts, macros, or input automation;
+- prohibited real-time overlays;
+- boosting, smurfing, account sharing, gambling, or market automation;
+- storing Steam passwords, cookies, personal tokens, or user API keys.
+
+## License
+
+MIT. See `LICENSE`.
