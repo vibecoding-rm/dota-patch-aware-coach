@@ -108,6 +108,30 @@ export function CoachApp() {
     window.history.replaceState({}, "", window.location.pathname);
   }, []);
 
+  // Permite que /match/[id] enlace a "/?match=<id>&mode=replay" y caigamos en
+  // el panel de Replay con el ID precargado. Se consume una sola vez al
+  // montar y se limpia el query para no reabrirlo al recargar.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const matchParam = params.get("match");
+    const modeParam = params.get("mode");
+    if (!matchParam && !modeParam) return;
+    if (matchParam && /^\d{6,}$/.test(matchParam)) {
+      replay.setMatchId(matchParam);
+    }
+    if (
+      modeParam === "replay" ||
+      modeParam === "draft" ||
+      modeParam === "patch" ||
+      modeParam === "vision" ||
+      modeParam === "coach"
+    ) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- one-shot URL param consumption on mount
+      setMode(modeParam);
+    }
+    window.history.replaceState({}, "", window.location.pathname);
+  }, [replay]);
+
   const copy = MODE_COPY[mode];
 
   const copyMarkdownReport = () => {
