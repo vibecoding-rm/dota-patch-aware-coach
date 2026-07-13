@@ -1,6 +1,6 @@
 // Auto-generado por scripts/sync-patch-notes.mjs desde el datafeed público de Valve.
 // NO editar a mano. Re-sincroniza con: node scripts/sync-patch-notes.mjs
-// Última sync: 2026-07-06
+// Última sync: 2026-07-13
 // Fuente: https://www.dota2.com/datafeed/patchnotes (cambios reales del parche).
 
 export type HeroPatchChange = {
