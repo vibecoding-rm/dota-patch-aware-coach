@@ -6,12 +6,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/devmaikelrm/dota-patch-aware-coach.git"
+    "url": "git+https://github.com/vibecoding-rm/dota-patch-aware-coach.git"
   },
   "bugs": {
-    "url": "https://github.com/devmaikelrm/dota-patch-aware-coach/issues"
+    "url": "https://github.com/vibecoding-rm/dota-patch-aware-coach/issues"
   },
-  "homepage": "https://github.com/devmaikelrm/dota-patch-aware-coach#readme",
+  "homepage": "https://github.com/vibecoding-rm/dota-patch-aware-coach#readme",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

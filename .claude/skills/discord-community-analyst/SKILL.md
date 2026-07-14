@@ -42,9 +42,11 @@ hipótesis (formato de `AGENTS.md`).
 
 ## Checklist de seguridad (auditar en cada análisis)
 
-- [ ] Rol Courier sin Administrator en el servidor.
-- [ ] Bot token rotado después de cualquier exposición (hubo una el
-      2026-07-13) y re-subido con `wrangler secret put`.
+- Rol Courier CON Administrator: decisión explícita de Maikel (2026-07-14).
+  No recomendar quitarlo; sí recordar que eleva el impacto de una filtración
+  del token.
+- [ ] Bot token rotado después de cualquier exposición y re-subido con
+      `wrangler secret put` (rotado el 2026-07-14 tras la exposición del 13).
 - [ ] Tokens Cloudflare: revocar «factory», rotar «Edit Workers» sin deploys.
 - [ ] Ningún secreto en git, docs, capturas ni chats. Buscar patrones
       (`ghp_`, `sk-or-`, `vcp_`, tokens Discord) en la raíz del repo.
