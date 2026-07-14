@@ -52,3 +52,32 @@ Razon:
   Workshop y Local Host agrega friccion; monetizacion incierta.
 - Torneos Discord genericos: el dolor existe, pero ya hay competidores; solo
   vale si se especializa fuerte en Dota 2 LATAM.
+
+## Revisión de oportunidad Discord — 2026-07-13
+
+La nueva solicitud no es construir un bot aislado, sino un servidor completo de
+comunicación para amigos y comunidad. La revisión pública confirma que LFG,
+voz, torneos, coaching, replays, stats, counters e IA ya existen por separado.
+
+Escala 1-5. En `Riesgo`, 5 significa riesgo alto.
+
+| Rank | Concepto | Dolor | Pago | Frecuencia | Acceso | Diferenciación | Riesgo | MVP |
+| ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 1 | Comunidad completa + Ciclo de Escuadra | 5 | 3 | 5 | 5 | 5 | 2 | 4 |
+| 2 | Liga semanal de mejora patch-aware | 4 | 4 | 4 | 5 | 5 | 1 | 4 |
+| 3 | Workspace para five-stacks y coaches | 4 | 4 | 4 | 3 | 4 | 2 | 3 |
+
+### Decisión
+
+Priorizar **comunidad completa + Ciclo de Escuadra**:
+
+```text
+perfil -> LFG compatible -> sala -> partida -> debrief opcional
+       -> tarea por parche -> próxima escuadra
+```
+
+No afirmar que «nadie lo tiene». La formulación respaldable es que, en la
+revisión pública realizada, no se encontró una comunidad hispana que cierre
+todo ese ciclo con fuente de parche, Match ID y seguimiento humano.
+
+Diseño completo: [servidor comunitario](servidor_discord.md).

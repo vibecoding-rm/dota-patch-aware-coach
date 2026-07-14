@@ -18,3 +18,9 @@ Formato recomendado por archivo:
 ```
 
 No guardar tokens, cookies, credenciales, mensajes privados ni datos personales.
+
+## Índice reciente
+
+- [Servidor Discord 2026-07-13](2026-07-13-servidor-discord.md): competencia,
+  dolores, Discord oficial, acceso seguro, monetización y límites
+  Valve/OpenDota para la comunidad.

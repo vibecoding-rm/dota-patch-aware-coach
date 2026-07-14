@@ -31,3 +31,21 @@ una solucion?
 
 Crear `producto/oportunidades.md` con al menos 10 oportunidades candidatas,
 ordenadas por potencial comercial y facilidad de validacion.
+
+## Ampliación: servidor de Discord 2026-07-13
+
+La investigación se amplía a una comunidad completa para que amigos y jugadores
+hispanos puedan hablar, entrar a voz, formar parties, equipos y scrims, participar
+en eventos y revisar partidas.
+
+Preguntas añadidas:
+
+- ¿Qué funciones ya ofrecen los servidores y bots Dota más grandes?
+- ¿Qué hace que una publicación LFG encuentre un grupo útil y recurrente?
+- ¿Cómo se evita abrir decenas de canales vacíos?
+- ¿Qué parte puede aprovisionar un bot oficial de Discord?
+- ¿Cómo conserva Maikel propiedad y secretos sin compartir su cuenta?
+- ¿Puede el ciclo `party -> partida -> replay -> siguiente tarea` mejorar la
+  retención?
+
+Plan y resultados: [investigación del servidor](02_servidor_discord.md).

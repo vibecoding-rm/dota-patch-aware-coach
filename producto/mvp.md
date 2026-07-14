@@ -142,3 +142,39 @@ Crear un prototipo sin plataforma:
   capturas Playwright desktop/mobile.
 - Pendiente inmediato: conectar Replay con OpenDota y generar un reporte
   Markdown real para un match ID publico.
+
+## Extensión MVP: comunidad Discord — 2026-07-13
+
+Discord será la capa social y de distribución del coach, no un reemplazo de la
+web ni un bot genérico de estadísticas.
+
+### Alcance de 14 días
+
+- servidor Community con onboarding y reglas;
+- chat social y salas de voz para jugar;
+- foros de party, equipo/suplente, scrim, preguntas y replays;
+- roles opt-in por posición, bracket, región y modo;
+- dos eventos semanales;
+- AutoMod y cola privada de moderación;
+- cuatro comandos: `/ayuda`, `/party`, `/parche`, `/replay`;
+- operación manual del Ciclo de Escuadra antes de automatizarlo.
+
+### Validación
+
+- 20 invitados y 12 onboarded;
+- tres escuadras activas;
+- fill rate LFG de al menos 60%;
+- menos de 20% de no-shows;
+- 10 Match IDs voluntarios y 6 debriefs cerrados;
+- 8 usuarios regresan la segunda semana;
+- 3 pagos de USD 3 por reporte o un piloto B2B.
+
+### Límites
+
+- Maikel crea y conserva la propiedad del servidor.
+- Codex opera mediante un bot oficial, nunca con cuenta humana.
+- No compartir contraseña, 2FA, cookies ni tokens por chat.
+- No lectura del cliente, GSI, overlay, automatización o consejo en vivo.
+- No torneos públicos sin la licencia gratuita de Valve.
+
+Especificación y acceso seguro: [servidor comunitario](servidor_discord.md).
