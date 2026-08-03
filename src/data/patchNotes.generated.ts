@@ -1,6 +1,6 @@
 // Auto-generado por scripts/sync-patch-notes.mjs desde el datafeed público de Valve.
 // NO editar a mano. Re-sincroniza con: node scripts/sync-patch-notes.mjs
-// Última sync: 2026-07-30
+// Última sync: 2026-08-03
 // Fuente: https://www.dota2.com/datafeed/patchnotes (cambios reales del parche).
 
 export type HeroPatchChange = {
@@ -17,81 +17,42 @@ export type HeroPatchChange = {
 };
 
 export const PATCH_NOTES_META = {
-  version: "7.41d",
-  releasedAt: "2026-06-04",
-  sourceUrl: "https://www.dota2.com/patches/7.41d",
-  heroesChanged: 81,
-  itemsChanged: 3,
-  neutralItemsChanged: 15,
+  version: "7.41e",
+  releasedAt: "2026-07-30",
+  sourceUrl: "https://www.dota2.com/patches/7.41e",
+  heroesChanged: 56,
+  itemsChanged: 26,
+  neutralItemsChanged: 8,
 } as const;
 
 export const HERO_PATCH_CHANGES: readonly HeroPatchChange[] = [
   {
-    "id": "morphling",
-    "name": "Morphling",
-    "numericId": 10,
+    "id": "snapfire",
+    "name": "Snapfire",
+    "numericId": 128,
     "changeCount": 7,
-    "abilitiesChanged": 2,
-    "icons": [
-      "strength",
-      "agility",
-      "damage"
-    ]
-  },
-  {
-    "id": "tiny",
-    "name": "Tiny",
-    "numericId": 19,
-    "changeCount": 7,
-    "abilitiesChanged": 6,
+    "abilitiesChanged": 3,
     "icons": []
   },
   {
-    "id": "spectre",
-    "name": "Spectre",
-    "numericId": 67,
-    "changeCount": 7,
-    "abilitiesChanged": 3,
-    "icons": [
-      "strength",
-      "agility"
-    ]
-  },
-  {
-    "id": "wraith-king",
-    "name": "Wraith King",
-    "numericId": 42,
-    "changeCount": 5,
-    "abilitiesChanged": 2,
-    "icons": [
-      "damage"
-    ]
-  },
-  {
-    "id": "gyrocopter",
-    "name": "Gyrocopter",
-    "numericId": 72,
+    "id": "bane",
+    "name": "Bane",
+    "numericId": 3,
     "changeCount": 5,
     "abilitiesChanged": 3,
     "icons": []
   },
   {
-    "id": "timbersaw",
-    "name": "Timbersaw",
-    "numericId": 98,
+    "id": "legion-commander",
+    "name": "Legion Commander",
+    "numericId": 104,
     "changeCount": 5,
-    "abilitiesChanged": 2,
+    "abilitiesChanged": 0,
     "icons": [
+      "strength",
+      "damage",
       "attack_speed"
     ]
-  },
-  {
-    "id": "kez",
-    "name": "Kez",
-    "numericId": 145,
-    "changeCount": 5,
-    "abilitiesChanged": 3,
-    "icons": []
   },
   {
     "id": "clockwerk",
@@ -102,65 +63,58 @@ export const HERO_PATCH_CHANGES: readonly HeroPatchChange[] = [
     "icons": []
   },
   {
-    "id": "jakiro",
-    "name": "Jakiro",
-    "numericId": 64,
-    "changeCount": 4,
-    "abilitiesChanged": 0,
-    "icons": [
-      "intelligence",
-      "damage"
-    ]
-  },
-  {
-    "id": "brewmaster",
-    "name": "Brewmaster",
-    "numericId": 78,
+    "id": "troll-warlord",
+    "name": "Troll Warlord",
+    "numericId": 95,
     "changeCount": 4,
     "abilitiesChanged": 2,
-    "icons": []
-  },
-  {
-    "id": "anti-mage",
-    "name": "Anti-Mage",
-    "numericId": 1,
-    "changeCount": 3,
-    "abilitiesChanged": 1,
     "icons": [
       "agility",
       "damage"
     ]
   },
   {
-    "id": "riki",
-    "name": "Riki",
-    "numericId": 32,
-    "changeCount": 3,
-    "abilitiesChanged": 3,
-    "icons": []
-  },
-  {
-    "id": "templar-assassin",
-    "name": "Templar Assassin",
-    "numericId": 46,
+    "id": "drow-ranger",
+    "name": "Drow Ranger",
+    "numericId": 6,
     "changeCount": 3,
     "abilitiesChanged": 1,
     "icons": []
   },
   {
-    "id": "ancient-apparition",
-    "name": "Ancient Apparition",
-    "numericId": 68,
+    "id": "shadow-fiend",
+    "name": "Shadow Fiend",
+    "numericId": 11,
+    "changeCount": 3,
+    "abilitiesChanged": 1,
+    "icons": [
+      "intelligence"
+    ]
+  },
+  {
+    "id": "zeus",
+    "name": "Zeus",
+    "numericId": 22,
     "changeCount": 3,
     "abilitiesChanged": 2,
     "icons": []
   },
   {
-    "id": "invoker",
-    "name": "Invoker",
-    "numericId": 74,
+    "id": "doom",
+    "name": "Doom",
+    "numericId": 69,
     "changeCount": 3,
-    "abilitiesChanged": 3,
+    "abilitiesChanged": 1,
+    "icons": [
+      "attack_range"
+    ]
+  },
+  {
+    "id": "gyrocopter",
+    "name": "Gyrocopter",
+    "numericId": 72,
+    "changeCount": 3,
+    "abilitiesChanged": 2,
     "icons": []
   },
   {
@@ -168,46 +122,23 @@ export const HERO_PATCH_CHANGES: readonly HeroPatchChange[] = [
     "name": "Outworld Devourer",
     "numericId": 76,
     "changeCount": 3,
-    "abilitiesChanged": 0,
-    "icons": [
-      "damage"
-    ]
-  },
-  {
-    "id": "dark-willow",
-    "name": "Dark Willow",
-    "numericId": 119,
-    "changeCount": 3,
     "abilitiesChanged": 1,
-    "icons": [
-      "intelligence",
-      "damage"
-    ]
-  },
-  {
-    "id": "pangolier",
-    "name": "Pangolier",
-    "numericId": 120,
-    "changeCount": 3,
-    "abilitiesChanged": 0,
-    "icons": [
-      "agility",
-      "damage",
-      "armor"
-    ]
-  },
-  {
-    "id": "snapfire",
-    "name": "Snapfire",
-    "numericId": 128,
-    "changeCount": 3,
-    "abilitiesChanged": 2,
     "icons": []
   },
   {
-    "id": "mars",
-    "name": "Mars",
-    "numericId": 129,
+    "id": "treant-protector",
+    "name": "Treant Protector",
+    "numericId": 83,
+    "changeCount": 3,
+    "abilitiesChanged": 2,
+    "icons": [
+      "attack_speed"
+    ]
+  },
+  {
+    "id": "hoodwink",
+    "name": "Hoodwink",
+    "numericId": 123,
     "changeCount": 3,
     "abilitiesChanged": 3,
     "icons": []
@@ -219,102 +150,56 @@ export const HERO_PATCH_CHANGES: readonly HeroPatchChange[] = [
     "changeCount": 2,
     "abilitiesChanged": 1,
     "icons": [
-      "health_regen"
-    ]
-  },
-  {
-    "id": "bloodseeker",
-    "name": "Bloodseeker",
-    "numericId": 4,
-    "changeCount": 2,
-    "abilitiesChanged": 2,
-    "icons": []
-  },
-  {
-    "id": "mirana",
-    "name": "Mirana",
-    "numericId": 9,
-    "changeCount": 2,
-    "abilitiesChanged": 2,
-    "icons": []
-  },
-  {
-    "id": "puck",
-    "name": "Puck",
-    "numericId": 13,
-    "changeCount": 2,
-    "abilitiesChanged": 0,
-    "icons": [
       "agility"
     ]
   },
   {
-    "id": "sand-king",
-    "name": "Sand King",
-    "numericId": 16,
+    "id": "morphling",
+    "name": "Morphling",
+    "numericId": 10,
+    "changeCount": 2,
+    "abilitiesChanged": 1,
+    "icons": []
+  },
+  {
+    "id": "necrophos",
+    "name": "Necrophos",
+    "numericId": 36,
+    "changeCount": 2,
+    "abilitiesChanged": 2,
+    "icons": []
+  },
+  {
+    "id": "beastmaster",
+    "name": "Beastmaster",
+    "numericId": 38,
+    "changeCount": 2,
+    "abilitiesChanged": 0,
+    "icons": []
+  },
+  {
+    "id": "queen-of-pain",
+    "name": "Queen of Pain",
+    "numericId": 39,
+    "changeCount": 2,
+    "abilitiesChanged": 2,
+    "icons": []
+  },
+  {
+    "id": "death-prophet",
+    "name": "Death Prophet",
+    "numericId": 43,
     "changeCount": 2,
     "abilitiesChanged": 0,
     "icons": [
-      "strength",
+      "agility",
       "damage"
     ]
   },
   {
-    "id": "storm-spirit",
-    "name": "Storm Spirit",
-    "numericId": 17,
-    "changeCount": 2,
-    "abilitiesChanged": 0,
-    "icons": [
-      "attack_speed"
-    ]
-  },
-  {
-    "id": "sven",
-    "name": "Sven",
-    "numericId": 18,
-    "changeCount": 2,
-    "abilitiesChanged": 2,
-    "icons": []
-  },
-  {
-    "id": "vengeful-spirit",
-    "name": "Vengeful Spirit",
-    "numericId": 20,
-    "changeCount": 2,
-    "abilitiesChanged": 1,
-    "icons": [
-      "health_regen"
-    ]
-  },
-  {
-    "id": "lion",
-    "name": "Lion",
-    "numericId": 26,
-    "changeCount": 2,
-    "abilitiesChanged": 1,
-    "icons": []
-  },
-  {
-    "id": "shadow-shaman",
-    "name": "Shadow Shaman",
-    "numericId": 27,
-    "changeCount": 2,
-    "abilitiesChanged": 2,
-    "icons": []
-  },
-  {
-    "id": "warlock",
-    "name": "Warlock",
-    "numericId": 37,
-    "changeCount": 2,
-    "abilitiesChanged": 1,
-    "icons": []
-  },
-  {
-    "id": "venomancer",
-    "name": "Venomancer",
-    "numericId": 40,
+    "id": "pugna",
+    "name": "Pugna",
+    "numericId": 45,
     "changeCount": 2,
     "abilitiesChanged": 0,
     "icons": [
@@ -323,96 +208,33 @@ export const HERO_PATCH_CHANGES: readonly HeroPatchChange[] = [
     ]
   },
   {
-    "id": "faceless-void",
-    "name": "Faceless Void",
-    "numericId": 41,
-    "changeCount": 2,
-    "abilitiesChanged": 2,
-    "icons": []
-  },
-  {
-    "id": "pugna",
-    "name": "Pugna",
-    "numericId": 45,
-    "changeCount": 2,
-    "abilitiesChanged": 1,
-    "icons": [
-      "mana_regen"
-    ]
-  },
-  {
-    "id": "dragon-knight",
-    "name": "Dragon Knight",
-    "numericId": 49,
+    "id": "spectre",
+    "name": "Spectre",
+    "numericId": 67,
     "changeCount": 2,
     "abilitiesChanged": 1,
     "icons": []
   },
   {
-    "id": "leshrac",
-    "name": "Leshrac",
-    "numericId": 52,
-    "changeCount": 2,
-    "abilitiesChanged": 2,
-    "icons": []
-  },
-  {
-    "id": "nature-s-prophet",
-    "name": "Nature's Prophet",
-    "numericId": 53,
+    "id": "invoker",
+    "name": "Invoker",
+    "numericId": 74,
     "changeCount": 2,
     "abilitiesChanged": 1,
     "icons": []
   },
   {
-    "id": "doom",
-    "name": "Doom",
-    "numericId": 69,
-    "changeCount": 2,
-    "abilitiesChanged": 1,
-    "icons": [
-      "intelligence"
-    ]
-  },
-  {
-    "id": "spirit-breaker",
-    "name": "Spirit Breaker",
-    "numericId": 71,
-    "changeCount": 2,
-    "abilitiesChanged": 2,
-    "icons": []
-  },
-  {
-    "id": "shadow-demon",
-    "name": "Shadow Demon",
-    "numericId": 79,
-    "changeCount": 2,
-    "abilitiesChanged": 1,
-    "icons": []
-  },
-  {
-    "id": "ogre-magi",
-    "name": "Ogre Magi",
-    "numericId": 84,
+    "id": "lone-druid",
+    "name": "Lone Druid",
+    "numericId": 80,
     "changeCount": 2,
     "abilitiesChanged": 0,
-    "icons": [
-      "strength",
-      "damage"
-    ]
-  },
-  {
-    "id": "rubick",
-    "name": "Rubick",
-    "numericId": 86,
-    "changeCount": 2,
-    "abilitiesChanged": 1,
     "icons": []
   },
   {
-    "id": "disruptor",
-    "name": "Disruptor",
-    "numericId": 87,
+    "id": "undying",
+    "name": "Undying",
+    "numericId": 85,
     "changeCount": 2,
     "abilitiesChanged": 1,
     "icons": [
@@ -420,14 +242,20 @@ export const HERO_PATCH_CHANGES: readonly HeroPatchChange[] = [
     ]
   },
   {
-    "id": "abaddon",
-    "name": "Abaddon",
-    "numericId": 102,
+    "id": "keeper-of-the-light",
+    "name": "Keeper of the Light",
+    "numericId": 90,
     "changeCount": 2,
-    "abilitiesChanged": 1,
-    "icons": [
-      "attack_speed"
-    ]
+    "abilitiesChanged": 2,
+    "icons": []
+  },
+  {
+    "id": "centaur-warrunner",
+    "name": "Centaur Warrunner",
+    "numericId": 96,
+    "changeCount": 2,
+    "abilitiesChanged": 2,
+    "icons": []
   },
   {
     "id": "elder-titan",
@@ -438,99 +266,61 @@ export const HERO_PATCH_CHANGES: readonly HeroPatchChange[] = [
     "icons": []
   },
   {
-    "id": "techies",
-    "name": "Techies",
-    "numericId": 105,
+    "id": "earth-spirit",
+    "name": "Earth Spirit",
+    "numericId": 107,
     "changeCount": 2,
-    "abilitiesChanged": 2,
-    "icons": []
-  },
-  {
-    "id": "phoenix",
-    "name": "Phoenix",
-    "numericId": 110,
-    "changeCount": 2,
-    "abilitiesChanged": 1,
-    "icons": []
-  },
-  {
-    "id": "winter-wyvern",
-    "name": "Winter Wyvern",
-    "numericId": 112,
-    "changeCount": 2,
-    "abilitiesChanged": 0,
-    "icons": []
-  },
-  {
-    "id": "arc-warden",
-    "name": "Arc Warden",
-    "numericId": 113,
-    "changeCount": 2,
-    "abilitiesChanged": 1,
-    "icons": []
-  },
-  {
-    "id": "grimstroke",
-    "name": "Grimstroke",
-    "numericId": 121,
-    "changeCount": 2,
-    "abilitiesChanged": 1,
-    "icons": []
-  },
-  {
-    "id": "hoodwink",
-    "name": "Hoodwink",
-    "numericId": 123,
-    "changeCount": 2,
-    "abilitiesChanged": 2,
-    "icons": []
-  },
-  {
-    "id": "ring-master",
-    "name": "Ring Master",
-    "numericId": 131,
-    "changeCount": 2,
-    "abilitiesChanged": 1,
-    "icons": []
-  },
-  {
-    "id": "marci",
-    "name": "Marci",
-    "numericId": 136,
-    "changeCount": 2,
-    "abilitiesChanged": 2,
-    "icons": []
-  },
-  {
-    "id": "largo",
-    "name": "Largo",
-    "numericId": 155,
-    "changeCount": 2,
-    "abilitiesChanged": 2,
-    "icons": []
-  },
-  {
-    "id": "earthshaker",
-    "name": "Earthshaker",
-    "numericId": 7,
-    "changeCount": 1,
     "abilitiesChanged": 0,
     "icons": [
-      "mana_regen"
+      "intelligence"
     ]
   },
   {
-    "id": "juggernaut",
-    "name": "Juggernaut",
-    "numericId": 8,
+    "id": "oracle",
+    "name": "Oracle",
+    "numericId": 111,
+    "changeCount": 2,
+    "abilitiesChanged": 2,
+    "icons": []
+  },
+  {
+    "id": "phantom-lancer",
+    "name": "Phantom Lancer",
+    "numericId": 12,
     "changeCount": 1,
     "abilitiesChanged": 1,
     "icons": []
   },
   {
-    "id": "pudge",
-    "name": "Pudge",
-    "numericId": 14,
+    "id": "puck",
+    "name": "Puck",
+    "numericId": 13,
+    "changeCount": 1,
+    "abilitiesChanged": 1,
+    "icons": []
+  },
+  {
+    "id": "tiny",
+    "name": "Tiny",
+    "numericId": 19,
+    "changeCount": 1,
+    "abilitiesChanged": 0,
+    "icons": [
+      "health_regen"
+    ]
+  },
+  {
+    "id": "vengeful-spirit",
+    "name": "Vengeful Spirit",
+    "numericId": 20,
+    "changeCount": 1,
+    "abilitiesChanged": 1,
+    "icons": []
+  },
+  {
+    "id": "lina",
+    "name": "Lina",
+    "numericId": 25,
     "changeCount": 1,
     "abilitiesChanged": 0,
     "icons": [
@@ -538,35 +328,9 @@ export const HERO_PATCH_CHANGES: readonly HeroPatchChange[] = [
     ]
   },
   {
-    "id": "razor",
-    "name": "Razor",
-    "numericId": 15,
-    "changeCount": 1,
-    "abilitiesChanged": 0,
-    "icons": [
-      "attack_speed"
-    ]
-  },
-  {
-    "id": "lina",
-    "name": "Lina",
-    "numericId": 25,
-    "changeCount": 1,
-    "abilitiesChanged": 1,
-    "icons": []
-  },
-  {
-    "id": "slardar",
-    "name": "Slardar",
-    "numericId": 28,
-    "changeCount": 1,
-    "abilitiesChanged": 1,
-    "icons": []
-  },
-  {
-    "id": "enigma",
-    "name": "Enigma",
-    "numericId": 33,
+    "id": "witch-doctor",
+    "name": "Witch Doctor",
+    "numericId": 30,
     "changeCount": 1,
     "abilitiesChanged": 1,
     "icons": []
@@ -580,27 +344,33 @@ export const HERO_PATCH_CHANGES: readonly HeroPatchChange[] = [
     "icons": []
   },
   {
-    "id": "dazzle",
-    "name": "Dazzle",
-    "numericId": 50,
+    "id": "venomancer",
+    "name": "Venomancer",
+    "numericId": 40,
     "changeCount": 1,
     "abilitiesChanged": 1,
     "icons": []
   },
   {
-    "id": "dark-seer",
-    "name": "Dark Seer",
-    "numericId": 55,
+    "id": "phantom-assassin",
+    "name": "Phantom Assassin",
+    "numericId": 44,
     "changeCount": 1,
-    "abilitiesChanged": 0,
-    "icons": [
-      "health_regen"
-    ]
+    "abilitiesChanged": 1,
+    "icons": []
   },
   {
-    "id": "clinkz",
-    "name": "Clinkz",
-    "numericId": 56,
+    "id": "templar-assassin",
+    "name": "Templar Assassin",
+    "numericId": 46,
+    "changeCount": 1,
+    "abilitiesChanged": 1,
+    "icons": []
+  },
+  {
+    "id": "dragon-knight",
+    "name": "Dragon Knight",
+    "numericId": 49,
     "changeCount": 1,
     "abilitiesChanged": 1,
     "icons": []
@@ -610,16 +380,6 @@ export const HERO_PATCH_CHANGES: readonly HeroPatchChange[] = [
     "name": "Omniknight",
     "numericId": 57,
     "changeCount": 1,
-    "abilitiesChanged": 0,
-    "icons": [
-      "intelligence"
-    ]
-  },
-  {
-    "id": "huskar",
-    "name": "Huskar",
-    "numericId": 59,
-    "changeCount": 1,
     "abilitiesChanged": 1,
     "icons": []
   },
@@ -627,22 +387,6 @@ export const HERO_PATCH_CHANGES: readonly HeroPatchChange[] = [
     "id": "night-stalker",
     "name": "Night Stalker",
     "numericId": 60,
-    "changeCount": 1,
-    "abilitiesChanged": 0,
-    "icons": []
-  },
-  {
-    "id": "broodmother",
-    "name": "Broodmother",
-    "numericId": 61,
-    "changeCount": 1,
-    "abilitiesChanged": 1,
-    "icons": []
-  },
-  {
-    "id": "bounty-hunter",
-    "name": "Bounty Hunter",
-    "numericId": 62,
     "changeCount": 1,
     "abilitiesChanged": 1,
     "icons": []
@@ -656,22 +400,38 @@ export const HERO_PATCH_CHANGES: readonly HeroPatchChange[] = [
     "icons": []
   },
   {
+    "id": "jakiro",
+    "name": "Jakiro",
+    "numericId": 64,
+    "changeCount": 1,
+    "abilitiesChanged": 0,
+    "icons": [
+      "intelligence"
+    ]
+  },
+  {
+    "id": "batrider",
+    "name": "Batrider",
+    "numericId": 65,
+    "changeCount": 1,
+    "abilitiesChanged": 1,
+    "icons": []
+  },
+  {
+    "id": "ancient-apparition",
+    "name": "Ancient Apparition",
+    "numericId": 68,
+    "changeCount": 1,
+    "abilitiesChanged": 1,
+    "icons": []
+  },
+  {
     "id": "chaos-knight",
     "name": "Chaos Knight",
     "numericId": 81,
     "changeCount": 1,
     "abilitiesChanged": 1,
     "icons": []
-  },
-  {
-    "id": "undying",
-    "name": "Undying",
-    "numericId": 85,
-    "changeCount": 1,
-    "abilitiesChanged": 0,
-    "icons": [
-      "mana_regen"
-    ]
   },
   {
     "id": "visage",
@@ -682,35 +442,17 @@ export const HERO_PATCH_CHANGES: readonly HeroPatchChange[] = [
     "icons": []
   },
   {
-    "id": "slark",
-    "name": "Slark",
-    "numericId": 93,
+    "id": "medusa",
+    "name": "Medusa",
+    "numericId": 94,
     "changeCount": 1,
     "abilitiesChanged": 1,
     "icons": []
   },
   {
-    "id": "troll-warlord",
-    "name": "Troll Warlord",
-    "numericId": 95,
-    "changeCount": 1,
-    "abilitiesChanged": 1,
-    "icons": []
-  },
-  {
-    "id": "skywrath-mage",
-    "name": "Skywrath Mage",
-    "numericId": 101,
-    "changeCount": 1,
-    "abilitiesChanged": 0,
-    "icons": [
-      "strength"
-    ]
-  },
-  {
-    "id": "legion-commander",
-    "name": "Legion Commander",
-    "numericId": 104,
+    "id": "magnus",
+    "name": "Magnus",
+    "numericId": 97,
     "changeCount": 1,
     "abilitiesChanged": 1,
     "icons": []
@@ -720,21 +462,49 @@ export const HERO_PATCH_CHANGES: readonly HeroPatchChange[] = [
     "name": "Ember Spirit",
     "numericId": 106,
     "changeCount": 1,
-    "abilitiesChanged": 1,
-    "icons": []
+    "abilitiesChanged": 0,
+    "icons": [
+      "movement"
+    ]
   },
   {
-    "id": "earth-spirit",
-    "name": "Earth Spirit",
-    "numericId": 107,
+    "id": "underlord",
+    "name": "Underlord",
+    "numericId": 108,
     "changeCount": 1,
     "abilitiesChanged": 1,
     "icons": []
   },
   {
-    "id": "dawnbreaker",
-    "name": "Dawnbreaker",
-    "numericId": 135,
+    "id": "grimstroke",
+    "name": "Grimstroke",
+    "numericId": 121,
+    "changeCount": 1,
+    "abilitiesChanged": 1,
+    "icons": []
+  },
+  {
+    "id": "mars",
+    "name": "Mars",
+    "numericId": 129,
+    "changeCount": 1,
+    "abilitiesChanged": 0,
+    "icons": [
+      "intelligence"
+    ]
+  },
+  {
+    "id": "ring-master",
+    "name": "Ring Master",
+    "numericId": 131,
+    "changeCount": 1,
+    "abilitiesChanged": 1,
+    "icons": []
+  },
+  {
+    "id": "muerta",
+    "name": "Muerta",
+    "numericId": 138,
     "changeCount": 1,
     "abilitiesChanged": 1,
     "icons": []
