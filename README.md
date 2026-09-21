@@ -1,7 +1,16 @@
-# Dota Patch-Aware Coach
+# 🎮 Dota Patch-Aware Coach
+
+[![▶ Live Demo](https://img.shields.io/badge/%E2%96%B6_Live_Demo-dota--patch--aware--coach.vercel.app-black?style=for-the-badge&logo=vercel)](https://dota-patch-aware-coach.vercel.app)
+
+[![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![OpenDota](https://img.shields.io/badge/data-OpenDota-red?style=flat-square)](https://www.opendota.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 
 Your personal Dota 2 coach in the browser: draft preparation, patch study,
 vision practice, and post-match reports — all from public match data.
+
+> 🔗 **Try it live:** **https://dota-patch-aware-coach.vercel.app**
 
 This is an independent educational tool for the player. It does not read game
 memory, automate inputs, provide prohibited real-time advantage, support
